@@ -1,4 +1,4 @@
-package com.cs336.pkg;
+package com.group37db336.pkg;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

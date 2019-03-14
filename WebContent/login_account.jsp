@@ -42,7 +42,12 @@
 		ps.setString(1, email);
 		ps.setString(2, password);
 		//Run the query against the DB
-		out.print((ps.executeQuery()).getInt("COUNT(*)"));
+		ResultSet result = ps.executeQuery();
+		result.next();
+		int numberOfAccounts = result.getInt("COUNT(*)");
+		if (numberOfAccounts < 1) { // no accounts w this info
+			throw new Exception("omg wig... Account does not exist. Try again.");
+		}
 
 		//Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
 		con.close();
@@ -50,8 +55,8 @@
 		out.print("Login succeeded!");
 		
 	} catch (Exception ex) {
-		out.print(ex);
-		out.print("Login failed :()");
+		// out.print(ex);
+		out.print("\nLogin failed\n");
 	}
 %>
 </body>

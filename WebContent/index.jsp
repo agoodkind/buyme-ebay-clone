@@ -4,23 +4,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Login</title>
 </head>
 <body>
 
 <br>
-	<form method="post" action="create_account.jsp">
+	<form method="post">
 	<table>
-	<tr>    
+	<tr>
 	<td>Email</td><td><input type="email" name="email"></td>
 	</tr>
 	<tr>
 	<td>Password</td><td><input type="password" name="password"></td>
 	</tr>
 	</table>
-	<input type="submit" value="create account">
+	<input id="loginButton" formaction="login_account.jsp" type="submit" value="login">
+	<input id="createAccountButton" formaction="create_account.jsp" type="submit" value="create account">
 	</form>
 <br>
+
 
 </body>
 </html>

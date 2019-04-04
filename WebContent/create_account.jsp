@@ -25,13 +25,6 @@
 				String email = request.getParameter("email");
 				String password = request.getParameter("password");
 	
-				if (email.length() == 0) { //if field is empty
-					throw new InvalidFieldException("<p>Email field left empty.</p>");
-				}
-				if (password.length() == 0) {
-					throw new InvalidFieldException("<p>Password field left empty.</p>");
-				}
-				
 				PreparedStatement ps;
 				
 				
@@ -45,7 +38,8 @@
 				int numberOfAccounts = result.getInt("COUNT(*)");
 				if (numberOfAccounts > 0) { // no accounts with this info
 					con.close();
-					throw new Exception("<p>Account already exists!</p>");
+					out.print("<p>Account already exists!</p>");
+					throw new Exception("account already exists");
 				}
 				//Make an insert statement for the Sells table
 				String insert = "INSERT INTO account(email_address, password)" + "VALUES (?, ?)";
@@ -67,7 +61,7 @@
 				out.print("<p>Account created!</p>");
 	
 			} catch (Exception ex) {
-				out.print(ex);
+				// out.print(ex);
 				out.print("<p>Account creation failed</p>");
 			}
 		%>

@@ -25,15 +25,6 @@
 				String email = request.getParameter("email");
 				String password = request.getParameter("password");
 	
-				if (email.length() == 0) { //if field is empty
-					con.close();
-					throw new InvalidFieldException("<p>Email field left empty.</p>");
-				}
-				if (password.length() == 0) {
-					con.close();
-					throw new InvalidFieldException("<p>Password field left empty.</p>");
-				}
-	
 				// Query DB for this user
 	
 				String select = "SELECT COUNT(*) FROM account WHERE email_address= ? AND password= ?";
@@ -48,7 +39,8 @@
 				result.next();
 				int numberOfAccounts = result.getInt("COUNT(*)");
 				if (numberOfAccounts < 1) { // no accounts w this info
-					throw new Exception("<p>Account does not exist with that email and password combination.</p>");
+					out.print("<p>Account does not exist with that email and password combination.</p>");
+					throw new Exception("mismatched name / pass");
 				}
 	
 				//Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
@@ -57,7 +49,7 @@
 				out.print("<p>Login succeeded!</p>");
 	
 			} catch (Exception ex) {
-				// out.print(ex);
+				//out.print(ex);
 				out.print("<p>Login failed.</p>");
 			}
 		%>

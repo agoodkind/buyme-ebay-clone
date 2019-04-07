@@ -20,7 +20,6 @@
 	
 				//Create a SQL statement
 				Statement stmt = con.createStatement();
-	
 				//Get parameters from the HTML form at the HelloWorld.jsp
 				String email = request.getParameter("email");
 				String password = request.getParameter("password");

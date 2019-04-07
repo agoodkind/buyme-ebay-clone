@@ -20,7 +20,7 @@
 					   password="${initParam['password']}"/>
 
 	<c:choose>
-		<c:when test="${cookie.logged_in.value == 'true'}">
+		<c:when test="${cookie.containsKey('logged_in')}">
 			<sql:query dataSource="${dataSource}" var="result">
 				select a.auction_id,
 				if(NOW() > closing_datetime, 1, 0) as auction_closed,
@@ -29,7 +29,7 @@
 				Account_Bids_On b,
 				Bids b1
 				where a.auction_id = b.auction_id
-				and b.account_id = 8;
+				and b.account_id = ${cookie.account_id.value};
 			</sql:query>
 
 			<sql:query dataSource="${dataSource}" var="account_details">
@@ -66,7 +66,11 @@
 					</tr>
 				</c:forEach>
 			</table>
+			<form>
+				<button type="submit" formaction="signout.jsp">Sign Out</button>
+			</form>
 		</c:when>
+
 		<c:otherwise>
 			<form>
 				<button type="submit" formaction="login_form.jsp">Login</button>

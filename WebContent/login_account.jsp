@@ -27,7 +27,7 @@
 	
 				// Query DB for this user
 	
-				String select = "SELECT COUNT(*) FROM account WHERE email_address= ? AND password= ?";
+				String select = "SELECT COUNT(*) FROM Account WHERE email_address= ? AND account_password= ?";
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 				PreparedStatement ps = con.prepareStatement(select);
 	
@@ -42,14 +42,41 @@
 					out.print("<p>Account does not exist with that email and password combination.</p>");
 					throw new Exception("mismatched name / pass");
 				}
+
+				// get account id
+
+				select = "SELECT id FROM Account WHERE email_address= ? AND account_password= ?";
+				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
+				ps = con.prepareStatement(select);
+				ps.setString(1, email);
+				ps.setString(2, password);
+				result = ps.executeQuery();
+				result.next();
+				int account_id = result.getInt("id");
+
 	
 				//Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
 				con.close();
+
+				// set the cookie so we know they logged in
 	
 				out.print("<p>Login succeeded!</p>");
-	
+
+				Cookie is_logged_in = new Cookie("logged-in","true");
+				Cookie logged_in_account_id =  new Cookie("account-id", Integer.toString(account_id));
+				is_logged_in.setMaxAge(60*60*24);
+				logged_in_account_id.setMaxAge(60*60*24);
+				System.out.print("login yes");
+
+				// Add both the cookies in the response header.
+				response.addCookie( is_logged_in );
+				response.addCookie( logged_in_account_id );
+
+				String site = "/home.jsp";
+				response.setHeader("Location", site);
+
 			} catch (Exception ex) {
-				//out.print(ex);
+				out.print(ex);
 				out.print("<p>Login failed.</p>");
 			}
 		%>

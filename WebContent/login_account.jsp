@@ -60,7 +60,7 @@
 
 				// set the cookie so we know they logged in
 	
-				out.print("<p>Login succeeded!</p>");
+				out.print("<p>Login succeeded! Redirecting...</p>");
 
 				Cookie is_logged_in = new Cookie("logged_in","true");
 				Cookie logged_in_account_id =  new Cookie("account_id", Integer.toString(account_id));
@@ -71,9 +71,7 @@
 				// Add both the cookies in the response header.
 				response.addCookie( is_logged_in );
 				response.addCookie( logged_in_account_id );
-
-				String site = "/home.jsp";
-				response.setHeader("Location", site);
+				response.sendRedirect("index.jsp"); // go back to page that will now be updated with the cookie logged in
 
 			} catch (Exception ex) {
 				out.print(ex);

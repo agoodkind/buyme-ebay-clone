@@ -62,8 +62,8 @@
 	
 				out.print("<p>Login succeeded!</p>");
 
-				Cookie is_logged_in = new Cookie("logged-in","true");
-				Cookie logged_in_account_id =  new Cookie("account-id", Integer.toString(account_id));
+				Cookie is_logged_in = new Cookie("logged_in","true");
+				Cookie logged_in_account_id =  new Cookie("account_id", Integer.toString(account_id));
 				is_logged_in.setMaxAge(60*60*24);
 				logged_in_account_id.setMaxAge(60*60*24);
 				System.out.print("login yes");

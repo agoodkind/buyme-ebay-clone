@@ -10,6 +10,14 @@
 		<form method="post">
 			<table>
 				<tr>
+					<td>First Name</td>
+					<td><input type="email" required="required" name="first_name"></td>
+				</tr>
+				<tr>
+					<td>Last Name</td>
+					<td><input type="email" required="required" name="last_name"></td>
+				</tr>
+				<tr>
 					<td>Email</td>
 					<td><input type="email" required="required" minlength="5" name="email"></td>
 				</tr>

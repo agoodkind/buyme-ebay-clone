@@ -27,7 +27,7 @@
 	
 				// Query DB for this user
 	
-				String select = "SELECT COUNT(*) FROM Account WHERE email_address= ? AND account_password= ?";
+				String select = "SELECT COUNT(*) FROM Account WHERE email_address= ? AND password= ?";
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 				PreparedStatement ps = con.prepareStatement(select);
 	
@@ -45,7 +45,7 @@
 
 				// get account id
 
-				select = "SELECT id FROM Account WHERE email_address= ? AND account_password= ?";
+				select = "SELECT id FROM Account WHERE email_address= ? AND password= ?";
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 				ps = con.prepareStatement(select);
 				ps.setString(1, email);

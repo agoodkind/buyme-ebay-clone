@@ -23,6 +23,8 @@
 				//Get parameters from the HTML form at the HelloWorld.jsp
 				String email = request.getParameter("email");
 				String password = request.getParameter("password");
+				String first_name = request.getParameter("first_name");
+				String last_name = request.getParameter("last_name");
 	
 				PreparedStatement ps;
 				
@@ -41,7 +43,7 @@
 					throw new Exception("account already exists");
 				}
 				//Make an insert statement for the Sells table
-				String insert = "INSERT INTO account(email_address, password)" + "VALUES (?, ?)";
+				String insert = "INSERT INTO account(email_address, password, first_name, last_name)" + "VALUES (?, ?, ?, ?)";
 	
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 
@@ -50,6 +52,8 @@
 				//Add parameters of the query. Start with 1, the 0-parameter is the INSERT statement itself
 				ps.setString(1, email);
 				ps.setString(2, password);
+				ps.setString(3, first_name);
+				ps.setString(4, last_name);
 				//Run the query against the DB
 				ps.executeUpdate();
 				
@@ -59,7 +63,7 @@
 				out.print("<p>Account created!</p>");
 	
 			} catch (Exception ex) {
-				// out.print(ex);
+				out.print(ex);
 				out.print("<p>Account creation failed</p>");
 			}
 		%>

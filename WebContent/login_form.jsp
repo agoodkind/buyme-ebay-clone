@@ -15,7 +15,7 @@
 				</tr>
 				<tr>
 					<td>Password</td>
-					<td><input type="password" required="required" minlength="1" name="password"></td>
+					<td><input type="password" required="required" minlength="8" name="password"></td>
 				</tr>
 			</table>
 			<button formaction="login_account.jsp" type="submit">Login</button>

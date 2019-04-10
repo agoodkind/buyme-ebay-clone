@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component LANGUAGE_LEVEL="JDK_1_7" inheritJdk="true">
-	<exclude-output/>
-	<contentEntry url="file://$MODULE_DIR$"/>
-	<lib name="Tomcat 7.0.93" scope="PROVIDED"/>
-	<levels>
-		<level name="Tomcat 7.0.93" value="application_server_libraries"/>
-	</levels>
-</component>

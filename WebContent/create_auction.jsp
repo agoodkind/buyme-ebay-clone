@@ -55,10 +55,13 @@
         ps=con.prepareStatement("select max(item_id) from Clothing_Item");
         ResultSet result = ps.executeQuery();
         result.next();
+        String item_id_string = result.getString("max(item_id)");
+
+        System.out.print("here: " + item_id_string);
 
         //Make an insert statement for the Sells table
-        String insert = "INSERT INTO Auction(initial_price, min_price, start_datetime, closing_datetime, item_id) VALUES (?, ?, ?, ?, ?)";
-
+        //String insert = "INSERT INTO Auction(initial_price, min_price, start_datetime, closing_datetime, item_id) VALUES(?, ?, ?, ?, ?)";
+        String insert = "insert into Auction(initial_price, min_price, start_datetime, closing_datetime, item_id) values(?, ?, ?, ?, ?)";
         //Create a Prepared SQL statement allowing you to introduce the parameters of the query
 
         ps = con.prepareStatement(insert);
@@ -68,7 +71,7 @@
         ps.setString(2, min_price);
         ps.setString(3, closing_datetime);
         ps.setString(4, closing_datetime);
-        ps.setInt(5, result.getInt("max(item_id)"));
+        ps.setString(5, item_id_string);
 
         //Run the query against the DB
         ps.executeUpdate();

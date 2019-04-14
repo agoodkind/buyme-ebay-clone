@@ -22,8 +22,29 @@
 
 <sql:query dataSource="${dataSource}" var="all_items">
     select *
-    from List_All_Items;
+    from List_Active_Auctions;
 </sql:query>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Item Name</th>
+        <th>Item Category</th>
+        <th>Current Bid</th>
+        <th>End Date</th>
+        <th>Seller</th>
+    </tr>
+
+    <c:forEach var="row" items="${all_items.rows}">
+        <tr>
+            <td><c:out value="${row.item_name}"/></td>
+            <td><c:out value="${row.item_type}"/></td>
+            <td><c:out value="${row.current_bid}"/></td>
+            <td><c:out value="${row.closing_datetime}"/></td>
+            <td><c:out value="${row.first_name}"/> <c:out value="${row.last_name}"/></td>
+            <td><form><button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button></form></td>
+        </tr>
+    </c:forEach>
+</table>
 
 </body>
 </html>

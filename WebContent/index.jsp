@@ -26,7 +26,7 @@
 				if(NOW() > closing_datetime, 1, 0) as auction_closed,
 				if(NOW() > closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction
 				from Auction a,
-				Account_Bids_On b,
+				Account_Bids_On_Auction b,
 				Bids b1
 				where a.auction_id = b.auction_id
 				and b.account_id = ${cookie.account_id.value};

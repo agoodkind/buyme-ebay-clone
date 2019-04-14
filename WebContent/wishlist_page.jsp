@@ -16,11 +16,12 @@
 	<sql:setDataSource var="dataSource"
 					   driver="${initParam['driverClass']}"
 					   url="${initParam['connectionURL']}"
-					   user="${initParam['michael@wang']}"
-					   password="${initParam['test1234']}"/>
+					   user="${initParam['username']}"
+					   password="${initParam['password']}"/>
 					   
 	<sql:query dataSource="${dataSource}" var="result">
-    	SELECT * FROM Wishlist;
+		<%--select from wishlist items in lists owned by currently-logged-in user --%>
+    	SELECT * FROM Wishlist w, Account a WHERE w.account_id = a.id and a.id = ${cookie.account_id.value};
 	</sql:query>
 	<div align="center">
         <table border="1" cellpadding="5">
@@ -30,17 +31,26 @@
                 <th>List Name</th>
                 <th>Item ID</th>
             </tr>
-	<c:forEach var="Wishlist" items="${Wishlist.rows}">
+			<c:forEach var="result" items="${result.rows}">
+				<tr>
+ 	
+    			<td><c:out value="${result.account_id}" /></td>
+ 		
+    			<td><c:out value="${result.list_name}" /></td>
+ 	
+    			<td><c:out value="${result.item_id}" /></td>
  
-    	<c:out value="${Wishlist.account_id}" />
- 
-    	<c:out value="${Wishlist.list_name}" />
- 
-    	<c:out value="${Wishlist.item_id}" />
- 
-	</c:forEach>
-	</table>
+ 				</tr>
+			</c:forEach>
+		</table>
+		 <form action="/action_page.php">
+  			ItemID <input type="text" name="item_id"><br>
+  			ListName <input type="text" name="list_name"><br>
+  			AccountID <input type="text" name="account_id"><br>
+  			<input type="submit" value="Delete From Wishlist" formaction="delete_from_wishlist.jsp">
+		</form> 
     </div>
+
 
 	</body>
 </html>

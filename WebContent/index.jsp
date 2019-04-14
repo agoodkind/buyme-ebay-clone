@@ -75,6 +75,7 @@
 			<form>
 				<button type="submit" formaction="login_form.jsp">Login</button>
 				<button type="submit" formaction="signup_form.jsp">Sign Up</button>
+				<button type="submit" formaction="Wishlist_Page.jsp">View Wishlist</button>
 			</form>
 		</c:otherwise>
 	</c:choose>

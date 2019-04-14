@@ -27,7 +27,7 @@
  <% String filter = request.getParameter("item_type");
  if (filter == null) { %>
 <h3>Filter results</h3>
-<form method="post" action="itemListFilter.jsp">
+<form method="post" action="item_search.jsp">
     <input type="radio" name="item_type" value="accessories">Accessories<br>
     <input type="radio" name="item_type" value="pants" >Pants<br>
     <input type="radio" name="item_type" value="shirts" >Shirts<br>

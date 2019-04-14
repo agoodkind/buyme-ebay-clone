@@ -23,7 +23,7 @@
 		<c:when test="${cookie.containsKey('logged_in')}">
 			<sql:query dataSource="${dataSource}" var="result">
 				select a.auction_id,
-				if(NOW() > closing_datetime, 1, 0) as auction_closed,
+				if(NOW() > closing_datetime, 1, 0)                                    as auction_closed,
 				if(NOW() > closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction
 				from Auction a,
 				Account_Bids_On_Auction b,

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,8 @@
     <title>Create an Auction - buyMe</title>
 </head>
 <body>
+<t:logged_in_header/>
+<h4>Please enter your auction and item details you would like to sell:</h4>
 <form method="post">
     <table>
         <tr>
@@ -45,7 +48,11 @@
         </tr>
 
     </table>
-    <button formaction="create_auction.jsp" type="submit">Create Auction</button>
+    <%
+        Cookie forward_to =  new Cookie("forward_to", "create_auction.jsp");
+        response.addCookie( forward_to );
+    %>
+    <button formaction="continue_creating_item.jsp" formmethod="post" type="submit">Continue</button>
 </form>
 </body>
 </html>

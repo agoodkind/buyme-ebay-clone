@@ -1,6 +1,7 @@
 /*
 /*/
 !/WebContent
+.DS_Store
 !/src
 !/README.md
 !/.gitignore

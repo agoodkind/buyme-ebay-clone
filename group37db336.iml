@@ -33,5 +33,7 @@
     <orderEntry type="library" name="org.eclipse.jst.j2ee.internal.module.container" level="application" />
     <orderEntry type="library" name="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0" level="application" />
     <orderEntry type="library" name="Tomcat 7.0.93" level="application_server_libraries" />
+    <orderEntry type="library" name="jstl-1.2" level="project" />
+    <orderEntry type="library" name="commons-lang-2.6" level="project" />
   </component>
 </module>

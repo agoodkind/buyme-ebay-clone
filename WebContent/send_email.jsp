@@ -10,7 +10,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Email Form</title>
 </head>
 <body>
 <%
@@ -78,7 +77,7 @@
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
         con.close();
 
-        out.print("<p>Email created!</p>");
+        out.print("<p>Email Sent!</p>");
 
     } catch (Exception ex) {
         out.print(ex);

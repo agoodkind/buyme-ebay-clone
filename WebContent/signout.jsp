@@ -26,6 +26,7 @@
                 }
             }
         }
+        session.invalidate();
         response.sendRedirect("index.jsp");
     } catch (Exception ex) {
         out.print(ex);

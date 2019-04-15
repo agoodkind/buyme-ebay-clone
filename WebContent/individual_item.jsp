@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <!DOCTYPE html>
 <html>
@@ -9,6 +10,8 @@
     <title>Item Page - buyMe</title>
 </head>
 <body>
+
+<t:logged_in_header />
 
     <%-- comment --%>
 
@@ -21,10 +24,10 @@
     <sql:query dataSource="${dataSource}" var="result">
         select *
         from Item;
-        <%--  where item_id = ??? --%>
+        where item_id = ${param.item_id}
     </sql:query>
 
-    <button formaction="createBids.jsp" type="submit">Bid On This Item</button>
+
 
 
 </body>

@@ -67,6 +67,9 @@
 					<form>
 					<button type="submit" formaction="wishlist_page.jsp">View Wishlist</button>
 					</form>
+					<form>
+					<button type="submit" formaction="view_auction.jsp">View Auctions</button>
+					</form>
 				</c:forEach>
 			</table>
 			<form>

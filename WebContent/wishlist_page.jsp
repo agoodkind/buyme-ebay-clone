@@ -35,8 +35,6 @@
 				<tr>
  	
     			<td><c:out value="${result.account_id}" /></td>
- 		
-    			<td><c:out value="${result.list_name}" /></td>
  	
     			<td><c:out value="${result.item_id}" /></td>
  
@@ -45,10 +43,12 @@
 		</table>
 		 <form action="/action_page.php">
   			ItemID <input type="text" name="item_id"><br>
-  			ListName <input type="text" name="list_name"><br>
   			AccountID <input type="text" name="account_id"><br>
   			<input type="submit" value="Delete From Wishlist" formaction="delete_from_wishlist.jsp">
 		</form> 
+		<form>
+			<button type="submit" formaction="index.jsp">Back</button>
+		</form>
     </div>
 
 

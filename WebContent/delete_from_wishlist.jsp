@@ -16,7 +16,6 @@
 <%
 try {
 String id_of_item = request.getParameter("item_id");
-String listname = request.getParameter("list_name");
 String id_of_account = request.getParameter("account_id");
 
 //Get the database connection
@@ -26,7 +25,7 @@ Connection con = db.getConnection();
 //Create a SQL statement
 				Statement stmt = con.createStatement();
 	
-				String select = "DELETE FROM Wishlist w WHERE w.account_id = ? and w.list_name = ? and w.item_id=?;";
+				String select = "DELETE FROM Wishlist w WHERE w.account_id = ? and w.item_id=?;";
 
 				
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
@@ -34,7 +33,6 @@ Connection con = db.getConnection();
 			
 				//Add parameters of the query. Start with 1, the 0-parameter is the INSERT statement itself
 				ps.setString(1, id_of_account);
-				ps.setString(2, listname);
 				ps.setString(3, id_of_item);
 				
 				//Run the query against the DB

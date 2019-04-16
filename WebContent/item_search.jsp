@@ -3,6 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ page import="java.io.*,java.util.*,java.sql.*" %>
+<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
+<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
 <%--
 Contributers:
 Alexander Goodkind amg540
@@ -23,43 +27,135 @@ Alexander Goodkind amg540
                    user="${initParam['username']}"
                    password="${initParam['password']}"/>
 
-
-<input type="text" minlength="3" name="s_query" placeholder="Search.."/>
-<input type="checkbox" name="advanced" value="true">Advanced Search<br/>
-<button formmethod="post" formaction="item_search.jsp">Go</button>
-
+<form>
+    <input type="text" minlength="3" name="s_query" placeholder="Search.."/><br/>
+    <input type="checkbox" name="auction_search" value="true">Search Auctions (Requires Advanced Search)<br/>
+    <button formmethod="get" formaction="item_search.jsp">Search</button>
+    <br/>
+    <button formmethod="get" name="advanced" value="true" formaction="item_search.jsp">Continue to Advanced Search
+    </button>
+</form>
 <c:choose>
     <c:when test="${not empty param.advanced}">
-        <c:set var="s_query" value="${param.s_query}" scope="request"/>
+        <c:set var="auction_search" value="${param.auction_search}"/>
+        <c:set var="s_query" value="${param.s_query}" scope="session"/>
         <jsp:forward page="advanced_search.jsp"/>
     </c:when>
-    <c:when test="${not empty param.s_query and empty param.advanced}">
-        <sql:query var="${results}">
+    <c:when test="${not empty param.s_query and empty param.advanced and empty param.forwarded_from}">
+        <sql:query dataSource="${dataSource}" var="results">
             select item_name, item_type, item_id from
             Clothing_Item
-            where item_name LIKE '%${param.s_query}';
+            where item_name LIKE '%${param.s_query}%';
         </sql:query>
+
 
         <c:choose>
             <c:when test="${not empty results}">
                 <table border="1" cellpadding="5">
+
                     <tr>
                         <th>Item Name</th>
                         <th>Item Category</th>
-                        <th></th>
                     </tr>
+
+                    <c:forEach var="row" items="${results.rows}">
+                        <tr>
+                            <td><c:out value="${row.item_name}"/></td>
+                            <td><c:out value="${row.item_type}"/></td>
+
+                            <td>
+                                <form>
+                                    <c:set var="forward_to" value="individual_item.jsp" scope="session"/>
+                                    <%
+                                        Cookie forward_to = new Cookie("forward_to", "individual_item.jsp");
+                                        response.addCookie(forward_to);
+                                    %>
+                                    <button value="${row.item_id}" name="item_id"
+                                            formaction="select_item_details.jsp">
+                                        View
+                                        Item
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
                 </table>
-                <c:forEach var="row" items="${results.rows}">
-                    <td><c:out value="${row.item_name}"/></td>
-                    <td><c:out value="${row.item_type}"/></td>
-                    <td>
-                        <form>
-                            <button value="${row.item_id}" name="auction_id" formaction="individual_item.jsp">View
-                                Item
-                            </button>
-                        </form>
-                    </td>
-                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                No results found.
+            </c:otherwise>
+        </c:choose>
+    </c:when>
+    <c:when test="${not empty advanced_query}">
+        <%--store SQL in session and retrieve here and run--%>
+        <sql:query dataSource="${dataSource}" var="advanced_results">
+            ${advanced_query}
+        </sql:query>
+        <c:choose>
+            <c:when test="${not empty advanced_results}">
+                <table border="1" cellpadding="5">
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Item Type</th>
+                        <c:forEach var="field_name" items="${field_list}">
+                            <th>${field_name}</th>
+                        </c:forEach>
+                        <c:if test="${auction_search == 'true'}">
+                            <th>Current Bid</th>
+                            <th>Seller</th>
+                            <th>End date</th>
+                        </c:if>
+                    </tr>
+
+                    <c:forEach var="row" items="${advanced_results.rows}">
+                        <tr>
+                            <td><c:out value="${row.item_name}"/></td>
+                            <td><c:out value="${row.item_type}"/></td>
+                            <c:forEach var="field_value" items="${field_values}">
+                                <td>${field_value}</td>
+                            </c:forEach>
+                            <c:choose>
+
+                                <c:when test="${auction_search == 'true' and not empty row.auction_id}">
+                                    <td>$<c:out value="${row.current_bid}"/></td>
+                                    <sql:query dataSource="${dataSource}" var="row_result">
+                                        select a.first_name, a.last_name, a.email_address
+                                        from Account_Sells_In_Auction asia, Account a
+                                        where asia.auction_id = ${row.auction_id};
+                                    </sql:query>
+                                    <td><c:out value="${row_result.rows[0].first_name}"/> <c:out
+                                            value="${row_result.rows[0].last_name}"/> <c:out
+                                            value="${row_result.rows[0].email_address}"/></td>
+
+                                    <td><c:out value="${row.closing_datetime}"/></td>
+                                </c:when>
+                            </c:choose>
+                            <td>
+                                <form>
+                                    <c:choose>
+
+                                        <c:when test="${auction_search == 'true' and not empty row.auction_id}">
+                                            ${row.auction_id}
+                                            <button value="${row.auction_id}" name="auction_id"
+                                                    formaction="view_auction.jsp">
+                                                View
+                                                Auction
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button value="${row.item_id}" name="item_id"
+                                                    formaction="individual_item.jsp">
+                                                View
+                                                Item
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </form>
+                            </td>
+
+                        </tr>
+                    </c:forEach>
+                </table>
             </c:when>
             <c:otherwise>
                 No results found.
@@ -67,7 +163,6 @@ Alexander Goodkind amg540
         </c:choose>
     </c:when>
 </c:choose>
-
 
 </body>
 </html>

@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Alexander Goodkind amg540
+  Date: 2019-04-16
+  Time: 14:35
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -25,14 +32,15 @@
 <form>
     <%
         // from previous page
-        session.setAttribute("initial_price", request.getParameter("initial_price"));
-        session.setAttribute("min_price", request.getParameter("min_price"));
-        session.setAttribute("start_datetime", request.getParameter("start_datetime"));
-        session.setAttribute("closing_datetime", request.getParameter("closing_datetime"));
-        session.setAttribute("size", request.getParameter("size"));
-        session.setAttribute("gender", request.getParameter("gender"));
-        session.setAttribute("item_name", request.getParameter("item_name"));
-        String item_type = request.getParameter("item_type");
+
+        int item_id;
+        if (request.getParameterMap().containsKey("item_id")) {
+            item_id = Integer.parseInt(request.getParameter("item_id"));
+            session.setAttribute("item_id", request.getParameter("item_id"));
+        } else {
+            item_id = (int) session.getAttribute("item_id");
+        }
+
         session.setAttribute("item_type", item_type);
 
         try {
@@ -53,6 +61,7 @@
             ResultSet rs = ps.executeQuery();
 
             ArrayList<String> field_list = new ArrayList<String>();
+            ArrayList<String> field_names = new ArrayList<String>();
 
 
             while (rs.next()) {
@@ -63,13 +72,14 @@
                     String[] enum_types = types.split(",");
 
                     for (int i = 0; i < enum_types.length; i++) {
-                        enum_types[i] = enum_types[i].replaceAll("\'","");
+                        enum_types[i] = enum_types[i].replaceAll("\'", "");
                     }
 
                     pageContext.setAttribute("enum_types", enum_types);
                     pageContext.setAttribute("label", rs.getString("Comment"));
                     pageContext.setAttribute("field", rs.getString("Field"));
                     field_list.add(rs.getString("Field"));
+
 
     %>
     <div>
@@ -85,6 +95,7 @@
             }
 
             session.setAttribute("field_list", field_list.toArray());
+
             //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
             con.close();
 
@@ -93,9 +104,20 @@
             out.print(ex);
         }
 
+        String forward_to = "index.jsp";
+        if (request.getParameterMap().containsKey("forward_to")) {
+            forward_to = request.getParameter("forward_to");
+        } else {
+            forward_to = (String) session.getAttribute("forward_to");
+        }
+
+        pageContext.setAttribute("forward_to", forward_to);
+
+
+        RequestDispatcher rd = request.getRequestDispatcher(forward_to);
+        rd.forward(request, response);
 
     %>
-    <button formaction="${cookie.forward_to.value}" formmethod="post">Continue</button>
 </form>
 
 </body>

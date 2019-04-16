@@ -1,18 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
-<!--Import some libraries that have classes that we need -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page import="java.io.*,java.util.*,java.sql.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Create Auction</title>
+    <title>Create an Auction - buyMe</title>
 </head>
 <body>
+<t:logged_in_header/>
 <%
     try {
 
@@ -31,6 +33,7 @@
         String closing_datetime = (String) session.getAttribute("closing_datetime");
         String size = (String) session.getAttribute("size");
         String gender = (String) session.getAttribute("gender");
+
         String item_name = (String) session.getAttribute("item_name");
         String item_type = (String) session.getAttribute("item_type");
 
@@ -113,6 +116,19 @@
         //Run the query against the DB
         ps.executeUpdate();
 
+
+        ps = con.prepareStatement("select auction_id from Auction where item_id = " + item_id_string);
+        result = ps.executeQuery();
+        result.next();
+        String auction_id_string = result.getString("auction_id");
+
+        insert = "insert into Account_Sells_In_Auction(Auction_Id, Account_Id) values( " + auction_id_string + " , " + session.getAttribute("account_id") + ")" ;
+        //Create a Prepared SQL statement allowing you to introduce the parameters of the query
+
+        ps = con.prepareStatement(insert);
+
+        ps.executeUpdate();
+
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
         con.close();
 
@@ -121,6 +137,7 @@
         // TODO: forward to a different page instead
 
     } catch (Exception ex) {
+        out.print(ex.getStackTrace());
         out.print(ex);
         out.print("<p>Auction creation failed</p>");
     }

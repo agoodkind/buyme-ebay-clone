@@ -25,11 +25,22 @@
 <form>
     <%
         // from previous page
+        session.setAttribute("initial_price", request.getParameter("initial_price"));
+        session.setAttribute("min_price", request.getParameter("min_price"));
+        session.setAttribute("start_datetime", request.getParameter("start_datetime"));
+        session.setAttribute("closing_datetime", request.getParameter("closing_datetime"));
         session.setAttribute("size", request.getParameter("size"));
         session.setAttribute("gender", request.getParameter("gender"));
         session.setAttribute("item_name", request.getParameter("item_name"));
-        String item_type = request.getParameter("item_type");
-        session.setAttribute("item_type", item_type);
+        String item_type;
+        if (request.getParameterMap().containsKey("item_type")) {
+            item_type = request.getParameter("item_type");
+            session.setAttribute("item_type", item_type);
+        } else {
+            item_type = (String) session.getAttribute("item_type");
+        }
+
+
 
         try {
 
@@ -59,13 +70,14 @@
                     String[] enum_types = types.split(",");
 
                     for (int i = 0; i < enum_types.length; i++) {
-                        enum_types[i] = enum_types[i].replaceAll("\'","");
+                        enum_types[i] = enum_types[i].replaceAll("\'", "");
                     }
 
                     pageContext.setAttribute("enum_types", enum_types);
                     pageContext.setAttribute("label", rs.getString("Comment"));
                     pageContext.setAttribute("field", rs.getString("Field"));
                     field_list.add(rs.getString("Field"));
+
 
     %>
     <div>
@@ -81,6 +93,7 @@
             }
 
             session.setAttribute("field_list", field_list.toArray());
+
             //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
             con.close();
 
@@ -90,8 +103,9 @@
         }
 
 
+
     %>
-    <button formaction="${cookie.forward_to.value}" formmethod="post">Continue</button>
+    <button formaction="${cookie.forward_to.value}" formmethod="get">Continue</button>
 </form>
 
 </body>

@@ -15,12 +15,12 @@
 </head>
 <body>
 <t:logged_in_header/>
-<h4>Please enter your auction and item details you would like to sell:</h4>
+<h4>Please enter the item you would like to get alerted for if it becomes available as an auction:</h4>
 <form method="post">
     <table>
         <tr>
             <td>Size</td>
-            <td><input type="text" required="required" name="size"></td>
+            <td><input type="number" maxlength="4" required="required" name="size"></td>
         </tr>
         <tr>
             <td>Gender</td>
@@ -40,25 +40,13 @@
             <td><input type="radio" required="required" name="item_type" value="Undergarments">Undergarments</td>
         </tr>
 
-        <tr>
-            <td>Initial Price</td>
-            <td><input type="number" required="required" name="initial_price"></td>
-        </tr>
-        <tr>
-            <td>Minimum Reserve Price</td>
-            <td><input type="number" required="required"name="min_price"></td>
-        </tr>
-        <tr>
-            <td>End Date (Number of days from now)</td>
-            <td><input type="number" required="required" name="closing_datetime"></td>
-        </tr>
-
     </table>
     <%
-        Cookie forward_to =  new Cookie("forward_to", "create_auction.jsp");
+        Cookie forward_to =  new Cookie("forward_to", "add_alert_to_wishlist.jsp");
         response.addCookie( forward_to );
     %>
-    <button formaction="select_item_details.jsp" formmethod="get" name="forward_to" value="create_auction.jsp" type="submit">Continue</button>
+    <c:set var="forward_to" value="add_alert_to_wishlist.jsp"/>
+    <button formaction="select_item_details.jsp" formmethod="get" type="submit">Continue</button>
 </form>
 </body>
 </html>

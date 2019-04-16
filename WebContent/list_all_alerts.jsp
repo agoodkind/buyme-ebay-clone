@@ -35,23 +35,52 @@ Amulya Mummaneni asm229
 <h2>View All Alerts</h2>
 <table border="1" cellpadding="5">
     <tr>
-        <th>Time</th>
+        <th>Time of Alert</th>
         <th>Alert Type</th>
         <th>Message</th>
+        <th>Alert Read</th>
+        <th></th>
     </tr>
 
     <c:forEach var="row" items="${result.rows}">
         <tr>
             <td><fmt:formatDate value="${row.alert_timestamp}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>
-            <td><c:out value="${row.alert_type}"/></td>
+            <td>
+                <c:choose>
+                    <c:when test="${row.alert_type == 'Bids_Alerts'}">
+                        <c:out value="${'Bid Alert'}"/>
+                    </c:when>
+                    <c:when test="${row.alert_type == 'Wishlist_Alerts'}">
+                        <c:out value="${'Wishlist Alert'}"/>
+                    </c:when>
+                    <c:when test="${row.alert_type == 'Auto_Bid_Alerts'}">
+                        <c:out value="${'Auto Bid Alert'}"/>
+                    </c:when>
+                    <c:otherwise> <%-- Auction close alert--%>
+                        <c:out value="${'Auction Close Alert'}"/>
+                    </c:otherwise>
+                </c:choose>
+            </td>
             <td><c:out value="${row.alert_message}"/></td>
             <td>
+                <c:choose>
+                    <c:when test="${row.alert_read == true}">
+                        <c:out value="Yes"></c:out>
+                    </c:when>
+                    <c:otherwise>
+                        <c:out value="No"></c:out>
+                    </c:otherwise>
+                </c:choose>
+            </td>
+            <td>
                 <form>
-                    <button value="${row.alert_id}" name="message_id" formaction="individual_email.jsp">Mark as Read</button>
+                    <button value="${row.alert_id}" name="alert_id" formaction="view_individual_alert.jsp">View Alert</button>
                 </form>
             </td>
         </tr>
     </c:forEach>
+
+
 </table>
 
 </body>

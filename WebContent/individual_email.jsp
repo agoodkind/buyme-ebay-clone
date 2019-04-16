@@ -24,6 +24,10 @@
     where e.from_account_id = a.id and message_id = ${param.message_id} and e.to_account_id = ${cookie.account_id.value};
 </sql:query>
 
+<%--Contributers:
+Amulya Mummaneni asm229
+<--%>
+
 <!DOCTYPE html>
 <html>
 <head>

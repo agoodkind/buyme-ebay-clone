@@ -3,6 +3,13 @@
 <!--Import some libraries that have classes that we need -->
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%--
+Contributers:
+Alexander Goodkind amg540,
+Amulya Mummaneni asm229,
+Madhumitha Sivaraj ms2407,
+Michael Wang mtw95
+--%>
 
 <!DOCTYPE html>
 <html>

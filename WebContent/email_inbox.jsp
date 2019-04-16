@@ -4,7 +4,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
+<%--Contributers:
+Alexander Goodkind amg540,
+Amulya Mummaneni asm229
+--%>
 <!DOCTYPE html>
 <html>
 <head>

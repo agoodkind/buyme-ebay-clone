@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
 <!DOCTYPE html>
+<%--
+Contributers:
+Alexander Goodkind amg540,
+Amulya Mummaneni asm229,
+Madhumitha Sivaraj ms2407,
+Michael Wang mtw95
+--%>
+
 <html>
 	<head>
 		<meta charset="UTF-8">

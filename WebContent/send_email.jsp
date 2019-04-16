@@ -24,9 +24,8 @@
         //Get parameters from the HTML form at the HelloWorld.jsp
         String message_subject = request.getParameter("message_subject");
         String content = request.getParameter("content");
-        String timesent = request.getParameter("timesent");
         String message_recipient = request.getParameter("message_recipient");
-		
+
         PreparedStatement ps;
        	ps=con.prepareStatement("select * from Account where email_address=?");
        	ps.setString(1, message_recipient);
@@ -40,9 +39,9 @@
        		out.print("User does not exist");
        		throw new Exception("User does not exist");
        	}
+
        	String to_account_id=result.getString("id");
-       
-        
+
         Cookie cookie = null;
         Cookie[] cookies = null;
         int account_id = 0;
@@ -51,26 +50,26 @@
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 cookie = cookies[i];
-                if ((cookie.getName()).compareTo("account_id") == 0) {
-                    account_id = Integer.getInteger(cookie.getValue());
+                if (cookie != null && (cookie.getName()).compareTo("account_id") == 0) {
+                    account_id = Integer.parseInt(cookie.getValue());
+                    break;
                 }
             }
         }
-        
+
         if(account_id == 0){
        		con.close();
        		out.print("Cannot send email when not logged in");
        		throw new Exception("Cannot send email when not logged in");
        	}
-        
-    	ps = con.prepareStatement("insert into Email (message_subject, content, timesent, from_account_id, to_account_id) values(?, ?, ?, ?, ?)");
+
+    	ps = con.prepareStatement("insert into Email (message_subject, content, timesent, from_account_id, to_account_id) values(?, ?, NOW(), ?, ?)");
     	
         ps.setString(1, message_subject);
         ps.setString(2, content);
-        ps.setString(3, timesent);
-        ps.setString(4, Integer.toString(account_id));
-        ps.setString(5, to_account_id);
-        
+        ps.setString(3, Integer.toString(account_id));
+        ps.setString(4, to_account_id);
+
 		//Run the query against the DB
 		ps.executeUpdate();
        

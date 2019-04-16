@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Inbox - buyMe</title>
+    <title>Alerts - buyMe</title>
 </head>
 <body>
 
@@ -24,39 +24,28 @@
                    password="${initParam['password']}"/>
 
 <sql:query dataSource="${dataSource}" var="result">
-    select e.from_account_id,
-    e.timesent,
-    e.message_subject,
-    e.message_id,
-    a.first_name,
-    a.last_name,
-    a.email_address
-    from Email e, Account a
-    where e.from_account_id = a.id and e.to_account_id = ${cookie.account_id.value}
-    order by e.timesent desc;
+    select *
+    from Alerts
+    where account_id= ${cookie.account_id.value}
+    order by alert_timestamp desc;
 </sql:query>
 
-<h2>View All Email</h2>
+<h2>View All Alerts</h2>
 <table border="1" cellpadding="5">
     <tr>
-        <th>From</th>
-        <th>Subject</th>
         <th>Time</th>
+        <th>Alert Type</th>
+        <th>Message</th>
     </tr>
 
     <c:forEach var="row" items="${result.rows}">
         <tr>
-            <td><c:out value="${row.first_name} ${row.last_name}"/>&comma;&nbsp;<i>&lt;<c:out value="${row.email_address}"/>&gt;</i></td>
-            <td><c:out value="${row.message_subject}"/></td>
-            <td><fmt:formatDate value="${row.timesent}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>
+            <td><fmt:formatDate value="${row.alert_timestamp}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>
+            <td><c:out value="${row.alert_type}"/></td>
+            <td><c:out value="${row.alert_message}"/></td>
             <td>
                 <form>
-                    <button value="${row.message_id}" name="message_id" formaction="individual_email.jsp">Open</button>
-                </form>
-            </td>
-            <td>
-                <form>
-                    <button value="${row.email_address}" name="email_address" formaction="contact_form.jsp">Reply</button>
+                    <button value="${row.alert_id}" name="message_id" formaction="individual_email.jsp">Mark as Read</button>
                 </form>
             </td>
         </tr>

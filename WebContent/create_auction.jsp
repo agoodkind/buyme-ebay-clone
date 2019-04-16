@@ -86,14 +86,14 @@
 </sql:update>
 
 */
-        String insert = "insert into ?(item_id, ?) values(?,?)";
+        String insert = "insert into "+item_type+"(item_id, "+StringUtils.join(field_list, ",")+") values("+item_id_string+","+StringUtils.join(field_values, ",")+")";
 
         ps = con.prepareStatement(insert);
 
-        ps.setString(1, item_type);
-        ps.setString(2, StringUtils.join(field_list, ","));
-        ps.setString(3, item_id_string);
-        ps.setString(4, StringUtils.join(field_values, ","));
+//        ps.setString(1, item_type);
+//        ps.setString(2, StringUtils.join(field_list, ","));
+//        ps.setString(3, item_id_string);
+//        ps.setString(4, StringUtils.join(field_values, ","));
 
         ps.executeUpdate();
 

@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
+<%--Contributers:
+Amulya Mummaneni asm229,
+Madhumitha Sivaraj ms2407,
+--%>
 <!DOCTYPE html>
 <html>
 <head>

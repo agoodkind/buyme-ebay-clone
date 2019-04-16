@@ -7,6 +7,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
+<%--Michael Wang mtw95--%>
+
 <!DOCTYPE html>
 <html>
 <head>

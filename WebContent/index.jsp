@@ -6,15 +6,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
+<%--
+Contributers:
+Alexander Goodkind amg540,
+Amulya Mummaneni asm229,
+Madhumitha Sivaraj ms2407,
+Michael Wang mtw95
+--%>
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Group 37 DB 336 - buyMe.com</title>
 </head>
 <body>
 
-<t:logged_in_header/>
 
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
@@ -24,6 +32,8 @@
 
 <c:choose>
     <c:when test="${cookie.containsKey('logged_in')}">
+        <t:logged_in_header/>
+
         <sql:query dataSource="${dataSource}" var="result">
             select
             ci.item_name,
@@ -47,7 +57,7 @@
 
 
         <h3>Welcome <c:out
-                value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"></c:out></h3>
+                value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"/></h3>
 
         <p>Here is the auctions you are bidding in:
         <p>

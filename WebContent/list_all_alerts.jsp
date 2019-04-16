@@ -15,7 +15,9 @@
 
 <t:logged_in_header/>
 
-<%-- comment --%>
+<%--Contributers:
+Amulya Mummaneni asm229
+--%>
 
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"

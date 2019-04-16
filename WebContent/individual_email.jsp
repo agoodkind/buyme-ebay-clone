@@ -4,7 +4,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
+<%--Contributers:
+Amulya Mummaneni asm229,
+Madhumitha Sivaraj ms2407,
+--%>
+<t:logged_in_header/>
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
                    url="${initParam['connectionURL']}"

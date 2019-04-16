@@ -14,7 +14,7 @@
     <table>
         <tr>
             <td>Size</td>
-            <td><input type="text" maxlength="4" required="required" name="size"></td>
+            <td><input type="number" maxlength="4" required="required" name="size"></td>
         </tr>
         <tr>
             <td>Gender</td>
@@ -36,15 +36,15 @@
 
         <tr>
             <td>Initial Price</td>
-            <td><input type="text" required="required" name="initial_price"></td>
+            <td><input type="number" required="required" name="initial_price"></td>
         </tr>
         <tr>
             <td>Minimum Reserve Price</td>
-            <td><input type="text" required="required"name="min_price"></td>
+            <td><input type="number" required="required"name="min_price"></td>
         </tr>
         <tr>
             <td>End Date (Number of days from now)</td>
-            <td><input type="date" required="required" name="closing_datetime"></td>
+            <td><input type="number" required="required" name="closing_datetime"></td>
         </tr>
 
     </table>
@@ -52,7 +52,7 @@
         Cookie forward_to =  new Cookie("forward_to", "create_auction.jsp");
         response.addCookie( forward_to );
     %>
-    <button formaction="continue_creating_item.jsp" formmethod="post" type="submit">Continue</button>
+    <button formaction="get_item_details.jsp" formmethod="get" type="submit">Continue</button>
 </form>
 </body>
 </html>

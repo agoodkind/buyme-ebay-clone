@@ -53,6 +53,7 @@
             ResultSet rs = ps.executeQuery();
 
             ArrayList<String> field_list = new ArrayList<String>();
+            ArrayList<String> field_names = new ArrayList<String>();
 
 
             while (rs.next()) {
@@ -63,13 +64,14 @@
                     String[] enum_types = types.split(",");
 
                     for (int i = 0; i < enum_types.length; i++) {
-                        enum_types[i] = enum_types[i].replaceAll("\'","");
+                        enum_types[i] = enum_types[i].replaceAll("\'", "");
                     }
 
                     pageContext.setAttribute("enum_types", enum_types);
                     pageContext.setAttribute("label", rs.getString("Comment"));
                     pageContext.setAttribute("field", rs.getString("Field"));
                     field_list.add(rs.getString("Field"));
+
 
     %>
     <div>
@@ -85,6 +87,7 @@
             }
 
             session.setAttribute("field_list", field_list.toArray());
+
             //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
             con.close();
 
@@ -95,7 +98,9 @@
 
 
     %>
-    <button formaction="${cookie.forward_to.value}" formmethod="post">Continue</button>
+    <button formaction="${cookie.forward_to.value}" name="forwarded_from" value="get_item_details.jsp"
+            formmethod="post">Continue
+    </button>
 </form>
 
 </body>

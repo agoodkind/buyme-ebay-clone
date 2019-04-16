@@ -11,7 +11,7 @@
 
         <button formmethod="post" type="submit" formaction="all_active_auctions.jsp">All Auctions</button>
 
-        <button formmethod="post" type="submit" formaction="#">Search</button>
+        <button formmethod="post" type="submit" formaction="item_search.jsp">Search</button>
 
         <button formmethod="post" type="submit" formaction="create_auction_form.jsp">Sell an Item in an Auction</button>
 

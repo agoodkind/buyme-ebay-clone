@@ -72,8 +72,8 @@
                 </form>
             </c:when>
             <c:otherwise>
-                <sql:transaction>
-                    <sql:update dataSource="${dataSource}" var="place_bid">
+                <sql:transaction dataSource="${dataSource}">
+                    <sql:update var="place_bid">
                         insert into Manually_Bid_On(amount, auction_id, account_id)
                         values(${param.amoun},${item.rows[0].auction_id},${cookie.account_id.value});
                     </sql:update>

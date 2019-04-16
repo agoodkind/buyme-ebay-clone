@@ -15,7 +15,7 @@ Madhumitha Sivaraj ms2407,
     <table>
         <tr>
             <td>Message Recipient</td>
-            <td><input type="email" maxlength="40" required="required" name="message_recipient"></td>
+            <td><input type="email" maxlength="40" required="required" value="${param.email_address}" name="message_recipient"></td>
         </tr>
          <tr>
             <td>Message Subject</td>
@@ -28,7 +28,7 @@ Madhumitha Sivaraj ms2407,
     
 
     </table>
-    <button formaction="alex_is_my_sister.jsp" type="submit">Send Email</button>
+    <button formaction="send_email.jsp" type="submit">Send Email</button>
 </form>
 </body>
 </html>

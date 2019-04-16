@@ -3,16 +3,25 @@
 <!--Import some libraries that have classes that we need -->
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%--
+Contributers:
+Alexander Goodkind amg540,
+Amulya Mummaneni asm229,
+Madhumitha Sivaraj ms2407,
+Michael Wang mtw95
+--%>
 
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Create Account</title>
+		<title>Login Account</title>
 	</head>
 	<body>
 		<%
 			try {
+
+
 	
 				//Get the database connection
 				ApplicationDB db = new ApplicationDB();
@@ -68,11 +77,13 @@
 				logged_in_account_id.setMaxAge(60*60*24);
 				System.out.print("login yes");
 
+
 				// Add both the cookies in the response header.
 				response.addCookie( is_logged_in );
 				response.addCookie( logged_in_account_id );
+				session.invalidate();
+				session = request.getSession(true);
 				response.sendRedirect("index.jsp"); // go back to page that will now be updated with the cookie logged in
-
 			} catch (Exception ex) {
 				out.print(ex);
 				out.print("<p>Login failed.</p>");

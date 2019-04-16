@@ -1,7 +1,11 @@
 /*
 /*/
 !/WebContent
+!/WebContent/
+!/WebContent/*
 !/src
+!/src/
+!/src/*
 !/README.md
 !/.gitignore
-!/.classpath
+.DS_Store

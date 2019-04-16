@@ -7,7 +7,9 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
-<!--Import some libraries that have classes that we need -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page import="java.io.*,java.util.*,java.sql.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
@@ -21,14 +23,13 @@
 </head>
 <body>
 
-<t:logged_in_header />
+<t:logged_in_header/>
 <%
     try {
 
         //Get the database connection
         ApplicationDB db = new ApplicationDB();
         Connection con = db.getConnection();
-
 
 
         //Get parameters from the session that were originally stored in continue_creating_item;
@@ -49,7 +50,7 @@
         // String[] field_list = field_list_param.toArray(new String[field_list_param.size()]);
         String[] field_values = new String[field_list.length];
 
-        for( int i = 0; i < field_list.length; i++ ) {
+        for (int i = 0; i < field_list.length; i++) {
             field_values[i] = request.getParameter(field_list[i]);
         }
 
@@ -57,16 +58,16 @@
 
         String queryBuilder = "";
 
-        queryBuilder += "select ci.item_id, ci.item_name, if(t2.auction_id, t2.auction_id, 0) as auction_id, ci.item_type, ci.size, ci.gender";
+        queryBuilder += "select ci.item_id, ci.item_name, if(t2.auction_id, t2.auction_id, 0) as auction_id, ci.item_type, ci.size, ci.gender, t2.auction_id, t2.current_bid, t2.closing_datetime, t2.start_datetime";
 
 
-        for ( String field_name : field_list) {
+        for (String field_name : field_list) {
             queryBuilder += ", t1." + field_name;
         }
 
-        queryBuilder += " from Clothing_Item ci inner join "+item_type+" t1 on ci.item_id = t1.item_id" +
-        " left join (select * from Auction where closing_datetime > NOW()) t2 on ci.item_id = t2.item_id" +
-        " where item_name LIKE '%"+s_query+"%'";
+        queryBuilder += " from Clothing_Item ci inner join " + item_type + " t1 on ci.item_id = t1.item_id" +
+                " left join (select * from Auction where closing_datetime > NOW()) t2 on ci.item_id = t2.item_id" +
+                " where item_name LIKE '%" + s_query + "%'";
 
         queryBuilder += " AND";
 
@@ -93,16 +94,12 @@
 
         con.close();
 
-%>
-
-<jsp:forward page="item_search.jsp"/>
-
-<%
-
+        response.sendRedirect("item_search.jsp");
 
         // TODO: forward SQL query to item_search.jsp
 
     } catch (Exception ex) {
+        out.print(ex.getStackTrace());
         out.print(ex);
         out.print("<p>Auction creation failed</p>");
     }

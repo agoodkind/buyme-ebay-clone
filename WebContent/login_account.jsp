@@ -81,10 +81,19 @@ Michael Wang mtw95
 				// Add both the cookies in the response header.
 				response.addCookie( is_logged_in );
 				response.addCookie( logged_in_account_id );
+
 				session.invalidate();
 				session = request.getSession(true);
+				session.setAttribute("account_id", Integer.toString(account_id));
+				session.setAttribute("logged_in", true);
+
+//				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+//				rd.forward(request, response);
+
 				response.sendRedirect("index.jsp"); // go back to page that will now be updated with the cookie logged in
+
 			} catch (Exception ex) {
+				out.print(ex.getStackTrace());
 				out.print(ex);
 				out.print("<p>Login failed.</p>");
 			}

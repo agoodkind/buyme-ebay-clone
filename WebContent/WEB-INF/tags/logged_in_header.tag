@@ -7,7 +7,7 @@
     <form>
         <button formmethod="post" type="submit" formaction="index.jsp">Home</button>
 
-        <button formmethod="post" type="submit" formaction="#">All Items</button>
+        <button formmethod="post" type="submit" formaction="add_alert_to_wishlist_form.jsp">Add an Alert to my Wishlist</button>
 
         <button formmethod="post" type="submit" formaction="all_active_auctions.jsp">All Auctions</button>
 
@@ -19,7 +19,7 @@
 
         <button formmethod="post" type="submit" formaction="wishlist_page.jsp">My Auctions</button>
 
-        <button formmethod="post" type="submit" formaction="#">My Alerts</button>
+        <button formmethod="post" type="submit" formaction="list_all_alerts.jsp">My Alerts</button>
 
         <button formmethod="post" type="submit" formaction="email_inbox.jsp">Email Inbox</button>
 

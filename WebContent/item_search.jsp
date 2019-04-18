@@ -27,6 +27,7 @@ Alexander Goodkind amg540
                    user="${initParam['username']}"
                    password="${initParam['password']}"/>
 
+
 <form>
     <input type="text" minlength="3" name="s_query" placeholder="Search.."/><br/>
     <input type="checkbox" name="auction_search" value="true">Search Auctions (Requires Advanced Search)<br/>
@@ -161,6 +162,9 @@ Alexander Goodkind amg540
                 No results found.
             </c:otherwise>
         </c:choose>
+        <c:remove var="field_list" scope="session" />
+        <c:remove var="field_values" scope="session" />
+        <c:remove var="advanced_query" scope="session" />
     </c:when>
 </c:choose>
 

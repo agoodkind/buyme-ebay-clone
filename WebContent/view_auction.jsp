@@ -7,6 +7,9 @@
 Contributers:
 Alexander Goodkind amg540
 --%>
+
+<%--TODO: add bid history--%>
+<%--TODO: add similar items--%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,6 +27,7 @@ Alexander Goodkind amg540
 
         <sql:query dataSource="${dataSource}" var="item">
             select distinct ac.first_name,
+            au.auction_id,
             ac.email_address,
             ac.last_name,
             au.current_bid,
@@ -78,7 +82,7 @@ Alexander Goodkind amg540
                 <sql:transaction dataSource="${dataSource}">
                     <sql:update var="place_bid">
                         insert into Manually_Bid_On(amount, auction_id, account_id)
-                        values(${param.amoun},${item.rows[0].auction_id},${cookie.account_id.value});
+                        values(${param.amount},${param.auction_id},${cookie.account_id.value});
                     </sql:update>
 
                     <c:if test="${place_bid == 1}">

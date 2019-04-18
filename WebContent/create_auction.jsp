@@ -132,9 +132,7 @@
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
         con.close();
 
-        out.print("<p>Auction created!</p>");
-
-        // TODO: forward to a different page instead
+        out.print("<p>Auction created!</p>"); 
 
     } catch (Exception ex) {
         out.print(ex.getStackTrace());

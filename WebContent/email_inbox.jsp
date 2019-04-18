@@ -62,6 +62,12 @@ Amulya Mummaneni asm229
                     <button value="${row.email_address}" name="email_address" formaction="contact_form.jsp">Reply</button>
                 </form>
             </td>
+            <td>
+                <form>
+<%--                    TODO: add delete button --%>
+                    <button value="${row.email_address}" name="email_address_delete" formaction="contact_form.jsp">Delete</button>
+                </form>
+            </td>
         </tr>
     </c:forEach>
 </table>

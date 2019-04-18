@@ -34,7 +34,7 @@ Michael Wang mtw95
 <h2>My Wishlist</h2>
 
 <c:if test="${not empty param.item_id}">
-    <sql:transaction>
+    <sql:transaction dataSource="${dataSource}">
         <sql:query var="delete_result">
             select item_name from Clothing_Item where item_id = ${param.item_id};
         </sql:query>

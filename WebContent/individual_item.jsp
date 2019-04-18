@@ -61,7 +61,7 @@
         <c:remove var="field_values" scope="session"/>
         <c:remove var="item_id" scope="session"/>
     </c:when>
-    <c:when test="${empty results}">
+    <c:when test="${empty results.rows}">
         Item not found.
     </c:when>
     <c:otherwise>

@@ -53,7 +53,7 @@ Michael Wang mtw95
 
         // get account id
 
-        select = "SELECT id FROM Account WHERE email_address= ? AND password= ?";
+        select = "SELECT id, account_type FROM Account WHERE email_address= ? AND password= ?";
         //Create a Prepared SQL statement allowing you to introduce the parameters of the query
         ps = con.prepareStatement(select);
         ps.setString(1, email);
@@ -61,6 +61,7 @@ Michael Wang mtw95
         result = ps.executeQuery();
         result.next();
         int account_id = result.getInt("id");
+        String account_type = result.getString("account_type");
 
 
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
@@ -84,6 +85,7 @@ Michael Wang mtw95
         session.invalidate();
         session = request.getSession(true);
         session.setAttribute("account_id", Integer.toString(account_id));
+        session.setAttribute("account_type", account_type);
         session.setAttribute("logged_in", true);
 
 //				RequestDispatcher rd = request.getRequestDispatcher("index.jsp");

@@ -19,7 +19,7 @@ Michael Wang mtw95
 
 <head>
     <meta charset="UTF-8">
-    <title>Group 37 DB 336 - buyMe.com</title>
+    <title>My Dashboard - buyMe.com</title>
 </head>
 <body>
 
@@ -55,9 +55,23 @@ Michael Wang mtw95
             where id = ${cookie.account_id.value};
         </sql:query>
 
-
+        <h1>My Dashboard</h1>
         <h3>Welcome <c:out
                 value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"/></h3>
+        <%--        add customer representative stuff here if account_type is correct--%>
+        <%--        add admin  stuff here if account_type is correct--%>
+        <c:if test="${sessionScope.account_type == 'Administrator'}">
+            <p style="background-color: red">You are an Administrator</p>
+            Admin Account stuff goes here
+        </c:if>
+
+        <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
+            <p style="background-color: blue">You are a Customer Service Representative (CSR)</p>
+        </c:if>
+
+        <c:if test="${sessionScope.account_type == 'Administrator' or sessionScope.account_type == 'Customer Service Representative'}">
+csr stuff here
+        </c:if>
 
         <p>Here is the auctions you are bidding in:
         <p>
@@ -94,6 +108,8 @@ Michael Wang mtw95
                 </tr>
             </c:forEach>
         </table>
+
+
     </c:when>
 
     <c:otherwise> <!-- if logged out -->

@@ -64,7 +64,7 @@ Amulya Mummaneni asm229
 
     </tr>
 </table>
-<p> <c:out value="${result.rows[0].content}"/></p>
+<p style="border-style: solid; border-color: black; border-width: 2px; width: 500px; height:400px;"> <c:out value="${result.rows[0].content}"/></p>
 
 </body>
 </html>

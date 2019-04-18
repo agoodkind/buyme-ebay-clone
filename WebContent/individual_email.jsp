@@ -25,8 +25,9 @@ Madhumitha Sivaraj ms2407,
     a.last_name,
     a.email_address
     from Email e, Account a
-    where e.from_account_id = a.id and message_id = ${param.message_id} and e.to_account_id = ${cookie.account_id.value};
+    where e.from_account_id = a.id and message_id = ${param.message_id} and e.to_account_id = ${cookie.account_id.value}
 </sql:query>
+
 
 <%--Contributers:
 Amulya Mummaneni asm229
@@ -40,8 +41,6 @@ Amulya Mummaneni asm229
     <title>${myTitle} - buyMe</title>
 </head>
 <body>
-
-<t:logged_in_header />
 
 <%-- comment --%>
 
@@ -59,6 +58,11 @@ Amulya Mummaneni asm229
             <td>
                 <form>
                     <button value="${result.rows[0].email_address}" name="email_address" formaction="contact_form.jsp">Reply</button>
+                </form>
+            </td>
+            <td>
+                <form>
+                    <button value="${result.rows[0].message_id}" name="message_id" formaction="delete_email.jsp">Delete</button>
                 </form>
             </td>
 

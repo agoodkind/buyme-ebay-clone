@@ -39,6 +39,16 @@ Amulya Mummaneni asm229
     order by e.timesent desc;
 </sql:query>
 
+<c:if test="${not empty param.message_id}">
+    <sql:transaction dataSource="${dataSource}">
+        <sql:update var="alert_marked">
+            DELETE FROM Email
+            WHERE message_id = ${param.message_id}
+        </sql:update>
+    </sql:transaction>
+    <br><br>Email successfully deleted. Refresh to reflect changes. <br>
+</c:if>
+
 <h2>View All Email</h2>
 <table border="1" cellpadding="5">
     <tr>
@@ -64,8 +74,11 @@ Amulya Mummaneni asm229
             </td>
             <td>
                 <form>
-<%--                    TODO: add delete button --%>
+
+                    <button value="${row.message_id}" name="message_id" formaction="email_inbox.jsp">Delete</button>
+
                     <button value="${row.email_address}" name="email_address_delete" formaction="contact_form.jsp">Delete</button>
+
                 </form>
             </td>
         </tr>

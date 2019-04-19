@@ -3,6 +3,10 @@
 <!--Import some libraries that have classes that we need -->
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%--
 Contributers:
 Alexander Goodkind amg540,
@@ -51,7 +55,7 @@ Michael Wang mtw95
 				}
 				//Make an insert statement for the Sells table
 				String insert = "INSERT INTO account(email_address, password, first_name, last_name)" + "VALUES (?, ?, ?, ?)";
-	
+
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 
 				ps = con.prepareStatement(insert);

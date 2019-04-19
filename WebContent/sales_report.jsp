@@ -44,7 +44,7 @@
         }
         out.print("Total Earnings: $" + earnings + "<br>");
         Statement stmt2 = con.createStatement();
-        ResultSet result2 = stmt2.executeQuery("SELECT COUNT(*) AS number_of_items FROM Auction");
+        ResultSet result2 = stmt2.executeQuery("SELECT COUNT(*) AS number_of_items FROM group37db.Auction");
         if (result2.next()) {
             count = result2.getInt("number_of_items");
         } else {
@@ -52,7 +52,7 @@
         }
         out.print("Earnings per Item: $" + (earnings / count) + "<br>");
 
-        PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) AS number_of_items FROM Clothing_Item WHERE item_name = ?");
+        PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) AS number_of_items FROM group37db.Clothing_Item WHERE item_name = ?");
         ps.setString(1, "Pants");
         ResultSet result3 = ps.executeQuery();
         if (result3.next()) {

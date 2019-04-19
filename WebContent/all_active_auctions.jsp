@@ -48,7 +48,7 @@
                 </form>
             </td>
             <c:if test="${sessionScope.account_type == 'Customer Service Representative' or sessionScope.account_type == 'Administrator'}">
-                <td>
+                <td style="background-color: red">
                     <form>
                         <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">delete</button>
                     </form>

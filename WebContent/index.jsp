@@ -40,8 +40,9 @@ Michael Wang mtw95
         <sql:query dataSource="${dataSource}" var="result">
             select ci.item_name,
             a.auction_id,
-            if(NOW() > closing_datetime, 1, 0) as auction_closed,
-            if(NOW() > closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction,
+            a.closing_datetime,
+            if(NOW() > a.closing_datetime, 1, 0) as auction_closed,
+            if(NOW() > a.closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction,
             a.current_bid,
             b.account_id,
             (select distinct b.account_id
@@ -76,7 +77,8 @@ Michael Wang mtw95
             Clothing_Item ci
             where a.auction_id = b.auction_id
             and ci.item_id = a.item_id
-            and b.account_id = ${cookie.account_id.value};
+            and b.account_id = ${cookie.account_id.value}
+            order by closing_datetime desc;
         </sql:query>
 
         <sql:query dataSource="${dataSource}" var="account_details">
@@ -163,7 +165,9 @@ Michael Wang mtw95
         </table>
         <sql:query dataSource="${dataSource}" var="all_items">
             select *
-            from List_Active_Auctions where account_id = ${cookie.account_id.value};
+            from List_Active_Auctions
+            where account_id = ${cookie.account_id.value}
+            order by closing_datetime desc;
         </sql:query>
 
         <p>Here are the auctions that you have started:</p>

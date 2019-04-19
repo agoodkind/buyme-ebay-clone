@@ -22,7 +22,8 @@
 
 <sql:query dataSource="${dataSource}" var="all_items">
     select *
-    from List_Active_Auctions;
+    from List_Active_Auctions
+    order by closing_datetime desc;
 </sql:query>
 
 <table border="1" cellpadding="5">

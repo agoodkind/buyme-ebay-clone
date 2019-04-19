@@ -49,6 +49,8 @@ Amulya Mummaneni asm229
     <br><br>Email successfully deleted. Refresh to reflect changes. <br>
 </c:if>
 
+<button formaction="contact_form.jsp">Compose New Email</button>
+
 <h2>View All Email</h2>
 <table border="1" cellpadding="5">
     <tr>
@@ -59,7 +61,8 @@ Amulya Mummaneni asm229
 
     <c:forEach var="row" items="${result.rows}">
         <tr>
-            <td><c:out value="${row.first_name} ${row.last_name}"/>&comma;&nbsp;<i>&lt;<c:out value="${row.email_address}"/>&gt;</i></td>
+            <td><c:out value="${row.first_name} ${row.last_name}"/>&comma;&nbsp;<i>&lt;<c:out
+                    value="${row.email_address}"/>&gt;</i></td>
             <td><c:out value="${row.message_subject}"/></td>
             <td><fmt:formatDate value="${row.timesent}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>
             <td>
@@ -69,15 +72,14 @@ Amulya Mummaneni asm229
             </td>
             <td>
                 <form>
-                    <button value="${row.email_address}" name="email_address" formaction="contact_form.jsp">Reply</button>
+                    <button value="${row.email_address}" name="email_address" formaction="contact_form.jsp">Reply
+                    </button>
                 </form>
             </td>
             <td>
                 <form>
 
                     <button value="${row.message_id}" name="message_id" formaction="email_inbox.jsp">Delete</button>
-
-                    <button value="${row.email_address}" name="email_address_delete" formaction="contact_form.jsp">Delete</button>
 
                 </form>
             </td>

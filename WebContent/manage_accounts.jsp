@@ -49,6 +49,8 @@
                         value="${edit_account.rows[0].last_name}" type="text" name="last_name"><br>
                     Email Address: <input type="email"
                                           name="email_address" value="${edit_account.rows[0].email_address}"><br>
+                    Password: <input type="password"
+                                          name="password"><br>
                     <div style="background-color: red">Account Type: <select
                             <c:if test="${sessionScope.account_type != 'Administrator'}">disabled</c:if>
                             value="${edit_account.rows[0].account_type}" name="account_type">
@@ -84,6 +86,11 @@
                         if (request.getParameter("account_type") != null && !request.getParameter("account_type").isEmpty()) {
                             params.put("account_type", request.getParameter("account_type"));
                         }
+
+                        if (request.getParameter("password") != null && !request.getParameter("password").isEmpty()) {
+                            params.put("password", request.getParameter("password"));
+                        }
+
 
                         int index = 0;
 

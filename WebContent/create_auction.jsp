@@ -122,7 +122,7 @@
         result.next();
         String auction_id_string = result.getString("auction_id");
 
-        insert = "insert into Account_Sells_In_Auction(Auction_Id, Account_Id) values( " + auction_id_string + " , " + session.getAttribute("account_id") + ")" ;
+        insert = "insert into Account_Sells_In_Auction(auction_Id, account_Id) values( " + auction_id_string + " , " + session.getAttribute("account_id") + ")" ;
         //Create a Prepared SQL statement allowing you to introduce the parameters of the query
 
         ps = con.prepareStatement(insert);

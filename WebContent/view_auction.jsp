@@ -112,7 +112,7 @@ Alexander Goodkind amg540
         delete from Manually_Bid_On where amount = param.amount and account_id = param.delete_bid_auction_id and auction_id = param.auction_id;
     </sql:update>
     <c:if test="${delete_from_bid_manual < 1}">
-        <sql:update var="${dataSource}" var="delete_from_bid_manual">
+        <sql:update dataSource="${dataSource}" var="delete_from_bid_manual">
             delete from Auto_Bid_On where amount = param.amount and account_id = param.delete_bid_auction_id and auction_id = param.auction_id;
         </sql:update>
     </c:if>

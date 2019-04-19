@@ -95,14 +95,17 @@ Michael Wang mtw95
         <c:if test="${sessionScope.account_type == 'Administrator' or  sessionScope.account_type == 'Customer Service Representative'}">
             <p style="background-color: red; color: white;">
                 <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
-
+                    You are a Customer Service Representative.
                 </c:if>
-                You are an Administrator<br/>
+                <c:if test="${sessionScope.account_type == 'Administrator'}">
+                    You are an Administrator.<br/>
+                </c:if>
                 A red background indicates an Administrative-<b>ONLY</b> area, potentially destructive actions are
                 possible.<br/></p>
             <form style="background-color: red;">
                 <c:if test="${sessionScope.account_type == 'Administrator'}">
-                    <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts</button>
+                    <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts
+                    </button>
                     <br/>
                 </c:if>
                 <button formmethod="get" type="submit" formaction="#">Sales Reports & Metrics</button>

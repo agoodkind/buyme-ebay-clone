@@ -90,28 +90,24 @@ Michael Wang mtw95
                 value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"/></h3>
         <%--        add customer representative stuff here if account_type is correct--%>
         <%--        add admin  stuff here if account_type is correct--%>
-        <c:if test="${sessionScope.account_type == 'Administrator'}">
+        <c:if test="${sessionScope.account_type == 'Administrator' or  sessionScope.account_type == 'Customer Service Representative'}">
             <p style="background-color: red; color: white;">
+                <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
+
+                </c:if>
                 You are an Administrator<br/>
                 A red background indicates an Administrative-<b>ONLY</b> area, potentially destructive actions are
-                possible.<br/>
+                possible.<br/></p>
             <form style="background-color: red;">
-                <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts
-                </button>
-                <br/>
+                <c:if test="${sessionScope.account_type == 'Administrator'}">
+                    <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts</button>
+                    <br/>
+                </c:if>
                 <button formmethod="get" type="submit" formaction="#">Sales Reports & Metrics</button>
                 <br/>
             </form>
-            </p>
         </c:if>
 
-        <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
-            <p style="background-color: blue; color: white;">You are a Customer Service Representative (CSR)</p>
-        </c:if>
-
-        <c:if test="${sessionScope.account_type == 'Administrator' or sessionScope.account_type == 'Customer Service Representative'}">
-            <p style="background-color: blue; color: white;">csr stuff goes here here</p>
-        </c:if>
 
         <p>Here are the auctions you have participated in as a buyer (bidder):
         <p>
@@ -205,13 +201,16 @@ Michael Wang mtw95
                             Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
                             <form>
                                 <button value="${row.highest_bidder_email_address}" name="email_address"
-                                        formaction="contact_form.jsp">contact</button>
+                                        formaction="contact_form.jsp">contact
+                                </button>
                             </form>
                         </td>
                     </c:if>
                     <td>
                         <form>
-                            <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">delete</button>
+                            <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">
+                                delete
+                            </button>
                         </form>
                     </td>
                 </tr>

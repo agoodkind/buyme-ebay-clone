@@ -19,7 +19,7 @@ Michael Wang mtw95
 			<table>
 				<tr>
 					<td>First Name</td>
-					<td><input type="email" required="required" name="first_name"></td>
+					<td><input type="test" required="required" name="first_name"></td>
 				</tr>
 				<tr>
 					<td>Last Name</td>

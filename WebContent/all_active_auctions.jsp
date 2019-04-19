@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
+         pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<t:logged_in_header />
+<t:logged_in_header/>
 
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
@@ -41,7 +41,18 @@
             <td><c:out value="${row.current_bid}"/></td>
             <td><c:out value="${row.closing_datetime}"/></td>
             <td><c:out value="${row.first_name}"/> <c:out value="${row.last_name}"/></td>
-            <td><form><button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button></form></td>
+            <td>
+                <form>
+                    <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button>
+                </form>
+            </td>
+            <c:if test="${sessionScope.account_type == 'Customer Service Representative' or sessionScope.account_type == 'Administrator'}">
+                <td>
+                    <form>
+                        <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">delete</button>
+                    </form>
+                </td>
+            </c:if>
         </tr>
     </c:forEach>
 </table>

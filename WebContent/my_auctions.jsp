@@ -1,3 +1,13 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Alexander Goodkind amg540
+  Date: 2019-04-17
+  Time: 20:03
+  To change this template use File | Settings | File Templates.
+
+  TODO: my_auctions
+  TODO: end auction early (update end time to NOW())
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -22,7 +32,7 @@
 
 <sql:query dataSource="${dataSource}" var="all_items">
     select *
-    from List_Active_Auctions;
+    from List_Active_Auctions where account_id = ${cookie.account_id.value};
 </sql:query>
 
 <table border="1" cellpadding="5">
@@ -40,7 +50,6 @@
             <td><c:out value="${row.item_type}"/></td>
             <td><c:out value="${row.current_bid}"/></td>
             <td><c:out value="${row.closing_datetime}"/></td>
-            <td><c:out value="${row.first_name}"/> <c:out value="${row.last_name}"/></td>
             <td><form><button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button></form></td>
         </tr>
     </c:forEach>

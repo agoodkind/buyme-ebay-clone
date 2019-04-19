@@ -17,13 +17,11 @@
 
         <button formmethod="post" type="submit" formaction="wishlist_page.jsp">My Wishlist</button>
 
-        <button formmethod="post" type="submit" formaction="wishlist_page.jsp">My Auctions</button>
+        <button formmethod="post" type="submit" formaction="my_auctions.jsp">My Auctions</button>
 
         <button formmethod="post" type="submit" formaction="list_all_alerts.jsp">My Alerts</button>
 
         <button formmethod="post" type="submit" formaction="email_inbox.jsp">Email Inbox</button>
-
-        <button formmethod="post" type="submit" formaction="#">Customer Service and Support</button>
 
         <button formmethod="post" type="submit" formaction="signout.jsp">Sign Out</button>
     </form>

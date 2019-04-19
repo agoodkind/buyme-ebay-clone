@@ -74,7 +74,11 @@ Amulya Mummaneni asm229
             </td>
             <td>
                 <form>
+
                     <button value="${row.message_id}" name="message_id" formaction="email_inbox.jsp">Delete</button>
+
+                    <button value="${row.email_address}" name="email_address_delete" formaction="contact_form.jsp">Delete</button>
+
                 </form>
             </td>
         </tr>

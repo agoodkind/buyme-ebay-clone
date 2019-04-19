@@ -41,7 +41,6 @@ Amulya Mummaneni asm229
         <th>Alert Read</th>
         <th></th>
     </tr>
-
     <c:forEach var="row" items="${result.rows}">
         <tr>
             <td><fmt:formatDate value="${row.alert_timestamp}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>

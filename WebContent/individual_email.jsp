@@ -50,8 +50,9 @@ Amulya Mummaneni asm229
     <tr>
         <th>From</th>
         <th>Time</th>
+      <th></th>
+      <th></th>
     </tr>
-
         <tr>
             <td><c:out value="${result.rows[0].first_name} ${result.rows[0].last_name}"/>&comma;&nbsp;<i>&lt;<c:out value="${result.rows[0].email_address}"/>&gt;</i></td>
             <td><fmt:formatDate value="${result.rows[0].timesent}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>
@@ -66,9 +67,9 @@ Amulya Mummaneni asm229
                 </form>
             </td>
 
-        </tr>
+    
 </table>
-<p> <c:out value="${result.rows[0].content}"/></p>
+<p style="border-style: solid; border-color: black; border-width: 2px; width: 500px; height:400px;"> <c:out value="${result.rows[0].content}"/></p>
 
 </body>
 </html>

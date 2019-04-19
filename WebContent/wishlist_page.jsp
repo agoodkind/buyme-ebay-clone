@@ -7,7 +7,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%--Michael Wang mtw95--%>
+<%--
+Contributers:
+Alexander Goodkind amg540,
+Michael Wang mtw95
+--%>
+
 
 <!DOCTYPE html>
 <html>
@@ -29,11 +34,11 @@
 <h2>My Wishlist</h2>
 
 <c:if test="${not empty param.item_id}">
-    <sql:transaction>
-        <sql:query dataSource="${dataSource}" var="delete_result">
+    <sql:transaction dataSource="${dataSource}">
+        <sql:query var="delete_result">
             select item_name from Clothing_Item where item_id = ${param.item_id};
         </sql:query>
-        <sql:update dataSource="${dataSource}" var="delete_query">
+        <sql:update var="delete_query">
             delete from Wishlist
             where account_id = ${cookie.account_id.value}
             and

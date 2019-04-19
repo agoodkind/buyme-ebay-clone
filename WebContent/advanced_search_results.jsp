@@ -54,7 +54,7 @@
             field_values[i] = request.getParameter(field_list[i]);
         }
 
-        session.setAttribute("field_values", field_values);
+
 
         String queryBuilder = "";
 
@@ -75,7 +75,7 @@
 
         if (field_values.length > 0) {
             for (int i = 1; i < field_values.length; i++) {
-                queryBuilder += " AND t1." + field_list[i] + "=" + field_values[i];
+                queryBuilder += " AND t1." + field_list[i] + " ="  + field_values[i];
             }
         }
         if (auction_search == "true") {
@@ -88,15 +88,13 @@
         PreparedStatement ps = con.prepareStatement(queryBuilder);
 
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
-
+        session.setAttribute("field_values", field_values);
         session.setAttribute("advanced_query", queryBuilder);
 
 
         con.close();
 
         response.sendRedirect("item_search.jsp");
-
-        // TODO: forward SQL query to item_search.jsp
 
     } catch (Exception ex) {
         out.print(ex.getStackTrace());

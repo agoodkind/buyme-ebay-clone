@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" import="com.group37db336.pkg.*"%>
+         pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%--Contributers:
 Amulya Mummaneni asm229,
@@ -19,17 +19,18 @@ Madhumitha Sivaraj ms2407,
     <table>
         <tr>
             <td>Message Recipient</td>
-            <td><input type="email" maxlength="40" required="required" value="${param.email_address}" name="message_recipient"></td>
+            <td><input type="email" maxlength="40" required="required" value="${param.email_address}"
+                       name="message_recipient"></td>
         </tr>
-         <tr>
+        <tr>
             <td>Message Subject</td>
             <td><input type="text" maxlength="50" required="required" name="message_subject"></td>
         </tr>
         <tr>
             <td>Content</td>
-            <td><input type="text" maxlength="50" required="required" name="content"></td>
+            <td><textarea name="content" style="width: 500px; height:400px;"></textarea></td>
         </tr>
-    
+
 
     </table>
     <button formaction="send_email.jsp" type="submit">Send Email</button>

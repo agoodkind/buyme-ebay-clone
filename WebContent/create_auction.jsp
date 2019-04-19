@@ -134,8 +134,6 @@
 
         out.print("<p>Auction created!</p>");
 
-        // TODO: forward to a different page instead
-
     } catch (Exception ex) {
         out.print(ex.getStackTrace());
         out.print(ex);

@@ -93,7 +93,6 @@ Alexander Goodkind amg540
 
         out.print("<p>Added to wishlist! You will get an alert when a similar item is made available for auction.</p>");
 
-        // TODO: forward to a different page instead
 
     } catch (Exception ex) {
         out.print(ex.getStackTrace());

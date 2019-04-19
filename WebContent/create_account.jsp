@@ -38,11 +38,10 @@ Michael Wang mtw95
 				String last_name = request.getParameter("last_name");
 	
 				PreparedStatement ps;
-				
-				
-				// check if emaila already exists
-				String checkString = "SELECT COUNT(*) FROM account WHERE email_address = ?";
+
+				String checkString = "SELECT COUNT(*) FROM Account WHERE email_address = ?";
 				ps = con.prepareStatement(checkString);
+				// check if emaila already exists
 				ps.setString(1, email);
 				ResultSet result = ps.executeQuery();
 				
@@ -54,7 +53,7 @@ Michael Wang mtw95
 					throw new Exception("account already exists");
 				}
 				//Make an insert statement for the Sells table
-				String insert = "INSERT INTO account(email_address, password, first_name, last_name)" + "VALUES (?, ?, ?, ?)";
+				String insert = "INSERT INTO Account(email_address, password, first_name, last_name)" + "VALUES (?, ?, ?, ?)";
 
 				//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 

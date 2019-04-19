@@ -41,12 +41,12 @@ Amulya Mummaneni asm229
 
 <c:if test="${not empty param.message_id}">
     <sql:transaction dataSource="${dataSource}">
-        <sql:update var="alert_marked">
+        <sql:update var="delete_email">
             DELETE FROM Email
             WHERE message_id = ${param.message_id}
         </sql:update>
     </sql:transaction>
-    <br><br>Email successfully deleted. Refresh to reflect changes. <br>
+    <br<c:choose><c:when test="${delete_email > 0}"></c:when></c:choose><br>Email successfully deleted. Refresh to reflect changes. <br>
 </c:if>
 
 <button formaction="contact_form.jsp">Compose New Email</button>

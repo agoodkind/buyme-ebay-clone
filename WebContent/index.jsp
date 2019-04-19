@@ -12,7 +12,10 @@ Alexander Goodkind amg540,
 Amulya Mummaneni asm229,
 Madhumitha Sivaraj ms2407,
 Michael Wang mtw95
+
+  TODO: end auction early (update end time to NOW())
 --%>
+
 
 <!DOCTYPE html>
 <html>
@@ -23,7 +26,6 @@ Michael Wang mtw95
 </head>
 <body>
 
-
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
                    url="${initParam['connectionURL']}"
@@ -31,15 +33,43 @@ Michael Wang mtw95
                    password="${initParam['password']}"/>
 
 <c:choose>
-    <c:when test="${cookie.containsKey('logged_in')}">
+    <c:when test="${cookie.containsKey('logged_in') and not empty sessionScope}">
         <t:logged_in_header/>
 
+
         <sql:query dataSource="${dataSource}" var="result">
-            select
-            ci.item_name,
+            select ci.item_name,
             a.auction_id,
             if(NOW() > closing_datetime, 1, 0) as auction_closed,
-            if(NOW() > closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction
+            if(NOW() > closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction,
+            a.current_bid,
+            b.account_id,
+            (select distinct b.account_id
+            from Bids b2
+            where b2.auction_id = a.auction_id
+            and b2.amount =
+            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id)) as highest_bidder_account_id,
+            (select a1.first_name
+            from Account a1
+            where a1.id = (select distinct b.account_id
+            from Bids b2
+            where b2.auction_id = a.auction_id
+            and b2.amount =
+            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id))) as highest_bidder_first_name,
+            (select a1.last_name
+            from Account a1
+            where a1.id = (select distinct b.account_id
+            from Bids b2
+            where b2.auction_id = a.auction_id
+            and b2.amount =
+            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id))) as highest_bidder_last_name,
+            (select a1.email_address
+            from Account a1
+            where a1.id = (select distinct b.account_id
+            from Bids b2
+            where b2.auction_id = a.auction_id
+            and b2.amount =
+            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id))) as highest_bidder_email_address
             from Auction a,
             Account_Bids_On_Auction b,
             Bids b1,
@@ -61,31 +91,44 @@ Michael Wang mtw95
         <%--        add customer representative stuff here if account_type is correct--%>
         <%--        add admin  stuff here if account_type is correct--%>
         <c:if test="${sessionScope.account_type == 'Administrator'}">
-            <p style="background-color: red">You are an Administrator</p>
-            Admin Account stuff goes here
+            <p style="background-color: red; color: white;">
+                You are an Administrator<br/>
+                A red background indicates an Administrative-<b>ONLY</b> area, potentially destructive actions are
+                possible.<br/>
+            <form style="background-color: red;">
+                <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts
+                </button>
+                <br/>
+                <button formmethod="get" type="submit" formaction="#">Sales Reports & Metrics</button>
+                <br/>
+            </form>
+            </p>
         </c:if>
 
         <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
-            <p style="background-color: blue">You are a Customer Service Representative (CSR)</p>
+            <p style="background-color: blue; color: white;">You are a Customer Service Representative (CSR)</p>
         </c:if>
 
         <c:if test="${sessionScope.account_type == 'Administrator' or sessionScope.account_type == 'Customer Service Representative'}">
-csr stuff here
+            <p style="background-color: blue; color: white;">csr stuff goes here here</p>
         </c:if>
 
-        <p>Here is the auctions you are bidding in:
+        <p>Here are the auctions you have participated in as a buyer (bidder):
         <p>
 
         <table border="1" cellpadding="5">
             <tr>
                 <th>Item</th>
-                <th>Status</th>
+                <th>Current Bid</th>
                 <th></th>
             </tr>
 
             <c:forEach var="row" items="${result.rows}">
                 <tr>
                     <td><c:out value="${row.item_name}"/></td>
+                    <td>
+                        <c:out value="${row.current_bid}"/>
+                    </td>
                     <td><c:choose>
                         <c:when test="${row.auction_closed == 1 && row.lost_auction == 1}">
                             you lost the auction
@@ -99,16 +142,81 @@ csr stuff here
                             Auction has not ended
                         </c:otherwise>
                     </c:choose></td>
+
+                    <c:if test="${row.auction_closed == 1}">
+                        <td>
+                            Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
+                            <form>
+                                <button value="${row.highest_bidder_email_address}" name="email_address"
+                                        formaction="contact_form.jsp">contact
+                                </button>
+                            </form>
+                        </td>
+                    </c:if>
+
+
                     <td>
                         <form>
                             <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View
+                                Auction
                             </button>
                         </form>
                     </td>
                 </tr>
             </c:forEach>
         </table>
+        <sql:query dataSource="${dataSource}" var="all_items">
+            select *
+            from List_Active_Auctions where account_id = ${cookie.account_id.value};
+        </sql:query>
 
+        <p>Here are the auctions that you have started:</p>
+
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>Item Name</th>
+                <th>Item Category</th>
+                <th>Current Bid</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+
+            <c:forEach var="row" items="${all_items.rows}">
+                <tr>
+                    <td><c:out value="${row.item_name}"/></td>
+                    <td><c:out value="${row.item_type}"/></td>
+                    <td><c:out value="${row.current_bid}"/></td>
+                    <td><c:out value="${row.closing_datetime}"/></td>
+
+                    <td>
+                        <form>
+                            <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View
+                                Auction
+                            </button>
+                        </form>
+                    </td>
+
+                    <td><c:if test="${row.auction_closed == 1}">
+                        Auction Closed
+                    </c:if></td>
+
+                    <c:if test="${row.auction_closed == 1}">
+                        <td>
+                            Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
+                            <form>
+                                <button value="${row.highest_bidder_email_address}" name="email_address"
+                                        formaction="contact_form.jsp">contact</button>
+                            </form>
+                        </td>
+                    </c:if>
+                    <td>
+                        <form>
+                            <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
 
     </c:when>
 

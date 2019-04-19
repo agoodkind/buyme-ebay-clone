@@ -33,7 +33,6 @@
 
 
 <c:choose>
-    <%--TODO: add auction results too--%>
 
     <c:when test="${not empty results and not empty param.forward_to}">
 

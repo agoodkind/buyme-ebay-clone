@@ -211,6 +211,13 @@ Michael Wang mtw95
                         </td>
                     </c:if>
                     <td>
+                    <form>
+                        <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">
+                            delete
+                        </button>
+                    </form>
+                </td>
+                    <td>
                         <form>
                             <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">
                                 delete

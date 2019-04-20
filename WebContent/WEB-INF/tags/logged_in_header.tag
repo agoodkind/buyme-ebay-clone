@@ -31,9 +31,6 @@
 
         |
 
-        <button formmethod="post" type="submit" formaction="#">Customer Service & Support</button>
-
-
         <button formmethod="post" type="submit" formaction="signout.jsp">Sign Out</button>
     </form>
     <br/>

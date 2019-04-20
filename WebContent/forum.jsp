@@ -18,6 +18,8 @@ Alexander Goodkind amg540
 
 <%--input param.auction_id--%>
 
+<h3>Q&A for Auction #${param.auction_id} - buyMe</h3>
+
 
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
@@ -29,23 +31,11 @@ Alexander Goodkind amg540
 
 
 <sql:query var="all_q_and_a" dataSource="${dataSource}">
-    select f.auction_id,
-    f.question,
-    f.answer,
-    f.asked_by_account_id,
-    f.answered_by_account_id,
-    a.first_name as asker_first_name,
-    a.last_name as asker_last_name,
-    a2.first_name as answerer_first_name,
-    a2.last_name as answerer_last_name
-    from Forum f
-    left join Account a on f.asked_by_account_id = a.id
-    left join Account a2 on f.answered_by_account_id = a2.id
-    where auction_id = ${param.auction_id};
+    select * from forum_q_a_list where auction_id = ${param.auction_id};
 </sql:query>
 
 <c:choose>
-    <c:when test="${all_q_and_a.rowCount > 0}">
+    <c:when test="${all_q_and_a.rowCount > 0 and empty param.user_asked_question_id and empty param.csr_reply_to_question_id}">
         <table border="1" cellpadding="5">
             <tr>
                 <th>Asked By</th>
@@ -70,6 +60,7 @@ Alexander Goodkind amg540
                                         <form>
                                             <input type="text" name="csr_answer"/>
                                             <input type="hidden" value="${param.auction_id}" name="auction_id"/>
+                                            <input type="hidden" value="${row.question_id}" name="question_id"/>
                                             <button formmethod="post" name="csr_reply_to_question_id" value="${sessionScope.account_id}" type="submit" formaction="forum.jsp">Reply to this question</button>
                                         </form>
                                     </td>
@@ -90,10 +81,9 @@ Alexander Goodkind amg540
 
     <c:when test="${not empty param.user_asked_question_id}">
         <sql:update dataSource="${dataSource}" var="user_asked_question_query">
-            update Forum
-            set question            = '<c:out value="${param.user_question}" escapeXml="true"/>',
-            asked_by_account_id = ${param.user_asked_question_id}
-            where auction_id =  ${param.auction_id};
+            insert into Forum(auction_id, question, asked_by_account_id)
+            values
+            (${param.auction_id},'<c:out value="${param.user_question}" escapeXml="true"/>', ${param.user_asked_question_id});
         </sql:update>
         <c:choose>
             <c:when test="${user_asked_question_query > 0}">
@@ -109,7 +99,9 @@ Alexander Goodkind amg540
             update Forum
             set answer ='<c:out value="${param.csr_answer}" escapeXml="true"/>',
             answered_by_account_id= ${param.csr_reply_to_question_id}
-            where auction_id = ${param.auction_id};
+
+            where auction_id = ${param.auction_id}
+            and question_id = ${param.question_id};
         </sql:update>
         <c:choose>
             <c:when test="${csr_answered_question_query > 0}">

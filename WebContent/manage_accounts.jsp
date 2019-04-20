@@ -212,7 +212,7 @@
                             </td>
                             <td>
                                 <form>
-                                    <button value="${row.id}" name="delete_account_id" formaction="view_user.jsp">view user
+                                    <button value="${row.id}" name="view_account_id" formaction="view_user.jsp">view user
                                     </button>
                                 </form>
                             </td>

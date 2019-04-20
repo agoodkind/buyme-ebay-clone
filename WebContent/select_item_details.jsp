@@ -29,8 +29,19 @@
         session.setAttribute("min_price", request.getParameter("min_price"));
         session.setAttribute("start_datetime", request.getParameter("start_datetime"));
         session.setAttribute("closing_datetime", request.getParameter("closing_datetime"));
+        session.setAttribute("size", request.getParameter("size"));
+        session.setAttribute("gender", request.getParameter("gender"));
+        session.setAttribute("item_name", request.getParameter("item_name"));
 
-        String item_type = (String) session.getAttribute("item_type");
+        String item_type;
+        if (request.getParameterMap().containsKey("item_type")) {
+            item_type = request.getParameter("item_type");
+            session.setAttribute("item_type", item_type);
+        } else {
+            item_type = (String) session.getAttribute("item_type");
+        }
+
+
 
         try {
 

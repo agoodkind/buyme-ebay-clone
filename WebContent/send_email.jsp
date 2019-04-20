@@ -4,7 +4,7 @@
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
-<%@ page import="java.time.*"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%--
 Contributers:
 Amulya Mummaneni asm229,
@@ -16,6 +16,7 @@ Madhumitha Sivaraj ms2407
     <meta charset="UTF-8">
 </head>
 <body>
+<t:logged_in_header/>
 <%
     try {
 

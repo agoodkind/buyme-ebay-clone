@@ -31,7 +31,7 @@ Michael Wang mtw95
                    password="${initParam['password']}"/>
 
 <c:choose>
-    <c:when test="${cookie.containsKey('logged_in') and not empty sessionScope}">
+    <c:when test="${not empty sessionScope.account_id and not empty sessionScope}">
         <t:logged_in_header/>
 
         <sql:query dataSource="${dataSource}" var="account_details">

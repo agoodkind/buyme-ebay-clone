@@ -25,9 +25,6 @@ version="4.0">
     <param-value>rutgersgroup37dbpassword</param-value>
   </context-param>
   <session-config>
-    <session-timeout>720</session-timeout> <!-- 720 minutes = 12 hours -->
-    <cookie-config>
-      <max-age>43200</max-age> <!-- 43200 seconds = 12 hours -->
-    </cookie-config>
+    <session-timeout>-1</session-timeout> <!-- 720 minutes = 12 hours -->
   </session-config>
 </web-app>

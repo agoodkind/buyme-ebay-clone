@@ -61,7 +61,7 @@ Michael Wang mtw95
                     </button>
                     <br/>
                 </c:if>
-                <button formmethod="post" type="submit" formaction="sales_report_page.jsp">Sales Reports & Metrics</button>
+                <button formmethod="post" type="submit" formaction="sales_reports_view.jsp">Sales Reports & Metrics</button>
                 <br/>
             </form>
         </c:if>

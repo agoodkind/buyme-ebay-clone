@@ -119,7 +119,7 @@ Michael Wang mtw95
                     <tr>
                         <th>Item</th>
                         <th>Current Bid</th>
-                        <th></th>
+                        <th>End Date</th>
                     </tr>
 
                     <c:forEach var="row" items="${result.rows}">
@@ -128,6 +128,7 @@ Michael Wang mtw95
                             <td>
                                 <c:out value="${row.current_bid}"/>
                             </td>
+                            <td><c:out value="${row.closing_datetime}"/></td>
                             <td><c:choose>
                                         <c:when test="${row.auction_closed == 1 && row.reserve_not_met == 1}">
                                             reserve not met. no one won.

@@ -90,10 +90,10 @@ Alexander Goodkind amg540
 
     <c:when test="${not empty param.user_asked_question_id}">
         <sql:update dataSource="${dataSource}" var="user_asked_question_query">
-            update forum (question, asked_by_account_id)
-            values
-            ('<c:out value="${param.user_question}" escapeXml="true"/>', ${param.user_asked_question_id})
-            where auction_id = ${param.auction_id};
+            update Forum
+            set question            = '<c:out value="${param.user_question}" escapeXml="true"/>',
+            asked_by_account_id = ${param.user_asked_question_id}
+            where auction_id =  ${param.auction_id};
         </sql:update>
         <c:choose>
             <c:when test="${user_asked_question_query > 0}">
@@ -106,9 +106,9 @@ Alexander Goodkind amg540
     </c:when>
     <c:when test="${not empty param.csr_reply_to_question_id}">
         <sql:update dataSource="${dataSource}" var="csr_answered_question_query">
-            update forum (answer, answered_by_account_id)
-            values
-            ('<c:out value="${param.csr_answer}" escapeXml="true"/>', ${param.csr_reply_to_question_id})
+            update Forum
+            set answer ='<c:out value="${param.csr_answer}" escapeXml="true"/>',
+            answered_by_account_id= ${param.csr_reply_to_question_id}
             where auction_id = ${param.auction_id};
         </sql:update>
         <c:choose>

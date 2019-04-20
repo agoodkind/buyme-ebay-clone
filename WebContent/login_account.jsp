@@ -75,7 +75,6 @@ Michael Wang mtw95
         Cookie logged_in_account_id = new Cookie("account_id", Integer.toString(account_id));
         is_logged_in.setMaxAge(60 * 60 * 24);
         logged_in_account_id.setMaxAge(60 * 60 * 24);
-        System.out.print("login yes");
 
 
         // Add both the cookies in the response header.

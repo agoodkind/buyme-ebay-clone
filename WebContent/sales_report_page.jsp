@@ -54,7 +54,7 @@ Michael Wang mtw95
 
 <%--EARNINGS PER END USER--%>
 <sql:query dataSource="${dataSource}" var="earnings_per_end_user">
- 	SELECT a.id as id, SUM(p.current_bid) as earnings
+ 	SELECT a.id as account_id, SUM(p.current_bid) as earnings
     from Auction p, Account_Sells_In_Auction ac, Account a
     where closing_datetime< NOW() and current_bid>=min_price and p.auction_id = ac.auction_id and ac.account_id = a.id
     GROUP BY a.id
@@ -64,7 +64,7 @@ Michael Wang mtw95
 <%--BEST SELLING ITEMS (best selling item = the items/auctions with most bids)--%>
 <%-- top 5 items --%>
 <sql:query dataSource="${dataSource}" var="best_selling_items">
-    SELECT b.auction_id as id, COUNT(distinct b.account_id) as count 
+    SELECT b.auction_id as auction_id, COUNT(distinct b.account_id) as count
     FROM Bids b
     group by b.auction_id
     order by count DESC 
@@ -131,7 +131,7 @@ Michael Wang mtw95
 <c:forEach var="row" items="${earnings_per_end_user.rows}">
 
         <tr>
-            <td><c:out value="${row.id}"></c:out></td>
+            <td><c:out value="${row.account_id}"></c:out></td>
             <td><c:out value="${row.earnings}"></c:out></td>
         </tr>
 </c:forEach>
@@ -145,7 +145,7 @@ Michael Wang mtw95
 </tr>
 <c:forEach var="row" items="${best_selling_items.rows}">
         <tr>
-            <td><c:out value="${row.id}"></c:out></td>
+            <td><c:out value="${row.auction_id}"></c:out></td>
             <td><c:out value="${row.count}"></c:out></td>
         </tr>
 </c:forEach>

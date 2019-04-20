@@ -112,8 +112,7 @@ Michael Wang mtw95
                 <br/>
             </form>
         </c:if>
-
-
+        
         <p>Here are the auctions you have participated in as a buyer (bidder):
         <p>
 
@@ -181,7 +180,6 @@ Michael Wang mtw95
                 <th>Item Category</th>
                 <th>Current Bid</th>
                 <th>End Date</th>
-                <th></th>
             </tr>
 
             <c:forEach var="row" items="${all_items.rows}">
@@ -198,21 +196,8 @@ Michael Wang mtw95
                             </button>
                         </form>
                     </td>
-
-                    <td><c:if test="${row.auction_closed == 1}">
-                        Auction Closed
-                    </c:if></td>
-
-                    <c:if test="${row.auction_closed == 1}">
-                        <td>
-                            Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
-                            <form>
-                                <button value="${row.highest_bidder_email_address}" name="email_address"
-                                        formaction="contact_form.jsp">contact
-                                </button>
-                            </form>
-                        </td>
-                    </c:if>
+                    <c:if test="${row.auction_closed == 1}"><td>Auction Closed</td></c:if>
+                    <c:if test="${row.auction_closed == 1 and row.current_bid >= row.min_price}"><td><form><button value="${row.highest_bidder_email_address}" name="email_address" formaction="contact_form.jsp">Contact Winner</button></form></td></c:if>
                 </tr>
             </c:forEach>
         </table>

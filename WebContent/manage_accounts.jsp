@@ -50,7 +50,7 @@
                     Email Address: <input type="email"
                                           name="email_address" value="${edit_account.rows[0].email_address}"><br>
                     Password: <input type="password"
-                                          name="password"><br>
+                                     name="password"><br>
                     <div style="background-color: red">Account Type: <select
                             <c:if test="${sessionScope.account_type != 'Administrator'}">disabled</c:if>
                             value="${edit_account.rows[0].account_type}" name="account_type">
@@ -91,7 +91,6 @@
                             params.put("password", request.getParameter("password"));
                         }
 
-
                         int index = 0;
 
                         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -105,8 +104,6 @@
                         }
 
                         pageContext.setAttribute("edit_query", queryBuilder);
-
-
                     %>
                     ${edit_query}  WHERE id = ${param.update_account_id_with_new_values};
                 </sql:update>
@@ -117,6 +114,46 @@
                     </c:when>
                 </c:choose>
             </c:when>
+            <c:when test="${not empty param.create_account}">
+
+                <form method="post">
+                    <table>
+                        <tr>
+                            <td>First Name</td>
+                            <td><input type="text" required="required" name="first_name"></td>
+                        </tr>
+                        <tr>
+                            <td>Last Name</td>
+                            <td><input type="text" required="required" name="last_name"></td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td><input type="email" required="required" minlength="5" name="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td><input type="password" required="required" minlength="8" name="password"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select
+                                        value="${edit_account.rows[0].account_type}" name="account_type">
+                                    <option value="End User">End User</option>
+                                    <option value="Customer Service Representative">Customer Service Representative
+                                    </option>
+                                    <c:if test="${sessionScope.account_type == 'Administrator'}">
+                                        <option value="Administrator">Administrator</option>
+                                    </c:if>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <button formaction="manage_accounts.jsp" value="submit_create_account" type="submit">Submit</button>
+                </form>
+            </c:when>
+            <c:otherwise>
+                <button formaction="manage_accounts.jsp" value="true" name="create_account" type="submit">Create Account</button>
+            </c:otherwise>
             <c:when test="${not empty param.delete_account_id}">
                 <sql:update dataSource="${dataSource}" var="delete_account">
                     delete from Account where id = ${param.delete_account_id};

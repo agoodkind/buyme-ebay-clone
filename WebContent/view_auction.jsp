@@ -71,23 +71,19 @@ Alexander Goodkind amg540
 
 <p>Seller: <c:out value="${item.rows[0].first_name} ${item.rows[0].last_name}"/></p>
 <c:choose>
-    <c:when test="${empty param.bid_auction_id}">
+    <c:when test="${empty param.amount}">
         <form>
-            <input type="number" name="amount" placeholder="${item.rows[0].current_bid + 1}"/>
-            <button formaction="view_auction.jsp" name="bid_auction_id" value="${item.rows[0].auction_id}" type="submit"
-                    formmethod="post">Bid
-                On This Item
-            </button>
+            <input type="number" name="amount" placeholder="${item.rows[0].current_bid + 1}" value="${item.rows[0].current_bid + 1}"/>
+            <button formaction="view_auction.jsp" name="auction_id" value="${item.rows[0].auction_id}" type="submit" formmethod="get">Bid On This Item</button>
         </form>
     </c:when>
     <c:otherwise>
         <sql:transaction dataSource="${dataSource}">
             <sql:update var="place_bid">
-                insert into Manually_Bid_On(amount, auction_id, account_id)
-                values(${param.amount},${param.bid_auction_id},${cookie.account_id.value});
+                insert into Manually_Bid_On(${param.amount},${param.auction_id},${cookie.account_id.value});
             </sql:update>
 
-            <c:if test="${place_bid == 1}">
+            <c:if test="${place_bid > 0}">
                 A <c:out value="${param.amount}"/> placed successfully
             </c:if>
         </sql:transaction>
@@ -104,19 +100,19 @@ Alexander Goodkind amg540
     from Bids b,
     Account a
     where a.id = b.account_id
-    and b.auction_id = ${param.auction_id};
+    and b.auction_id = ${param.auction_id}
+    ORDER BY b.amount desc;
 </sql:query>
 
-<c:if test="${not empty param.delete_bid_auction_id}">
+<c:if test="${not empty param.delete_bid}">
     <sql:update dataSource="${dataSource}" var="delete_from_bid_manual">
-        delete from Manually_Bid_On where amount = param.amount and account_id = param.delete_bid_auction_id and auction_id = param.auction_id;
+        delete from Manually_Bid_On where amount = ${param.amount} and account_id = ${cookie.account_id.value} and auction_id = ${param.auction_id};
     </sql:update>
     <c:if test="${delete_from_bid_manual < 1}">
         <sql:update dataSource="${dataSource}" var="delete_from_bid_manual">
-            delete from Auto_Bid_On where amount = param.amount and account_id = param.delete_bid_auction_id and auction_id = param.auction_id;
+            delete from Auto_Bid_On where amount = ${param.amount} and account_id = ${cookie.account_id.value} and auction_id = ${param.auction_id};
         </sql:update>
     </c:if>
-
 </c:if>
 
 <c:choose>
@@ -144,7 +140,8 @@ Alexander Goodkind amg540
                             <form>
                                 <input type="hidden" name="amount" value="${row.amount}">
                                 <input type="hidden" name="account_id" value="${row.account_id}">
-                                <button formaction="view_auction.jsp" value="${row.auction_id}" name="delete_bid_auction_id" type="submit" formmethod="post">Delete Bid</button>
+                                <input type="hidden" name="delete_bid" value="true">
+                                <button formaction="view_auction.jsp" value="${row.auction_id}" name="auction_id" type="submit" formmethod="post">Delete Bid</button>
                             </form>
                         </td>
                     </c:if>

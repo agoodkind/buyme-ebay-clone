@@ -50,9 +50,7 @@
     </c:if>
 
     <c:choose>
-        <c:when test="${not empty param.auction_search and empty param.auction_search_continue }">
-
-            doing auction search
+        <c:when test="${empty param.auction_search_continue}">
             Max price of current bid: <input type="number" required="required" name="auction_current_bid_below"><br/>
             Minimum number of days until auction ends: <input type="number" required="required"
                                                               name="auction_ends_num_days_from_now"><br/>
@@ -75,10 +73,6 @@
             <%--  set session stuff for auction deets and forward to select_item_details --%>
 
             <jsp:forward page="select_item_details.jsp"/>
-        </c:when>
-        <c:when test="${empty cookie.auction_search and empty param.auction_search_continue}">
-            not doing auction search
-            <button formmethod="get" formaction="select_item_details.jsp">Continue</button>
         </c:when>
     </c:choose>
 

@@ -30,7 +30,6 @@ Alexander Goodkind amg540
 
 <form>
     <input type="text" minlength="3" name="s_query" placeholder="Search.."/><br/>
-    <input type="checkbox" name="auction_search" value="true">Search Auctions (Requires Advanced Search)<br/>
     <button formmethod="get" formaction="item_search.jsp">Search</button>
     <br/>
     <select>

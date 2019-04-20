@@ -30,6 +30,7 @@ Alexander Goodkind amg540
     ac.last_name,
     au.current_bid,
     au.closing_datetime,
+    if(NOW() > au.closing_datetime, 1, 0) as auction_closed,
     au.start_datetime,
     ci.item_type,
     ci.item_name,
@@ -70,30 +71,30 @@ Alexander Goodkind amg540
 </c:choose>
 
 <p>Seller: <c:out value="${item.rows[0].first_name} ${item.rows[0].last_name}"/></p>
+<form>
+    <button formaction="forum.jsp" name="auction_id" value="${param.auction_id}">View Questions and Answers for this auction</button>
+</form><br/>
 
 <sql:query var="account_bids_on" dataSource="${dataSource}">
-    select * from Account_Bids_On_Auction abo where abo.account_id = ${cookie.account_id.value} and abo.auction_id
+    select *
+    from Account_Bids_On_Auction abo
+    where abo.account_id = ${cookie.account_id.value}
+    and abo.auction_id
     = ${param.auction_id};
 </sql:query>
 
-
-
-<form>
-    <c:choose>
-        <c:when test="${account_bids_on.rowCount != 1}">
-            Please Enter Upper Limit (anything above 0 automatically turns on auto-bidding, with increments of $1): <input type="text" name="upper_limit" value="0"/><br>
-        </c:when>
-    </c:choose>
-    <input type="number" name="amount" placeholder="${item.rows[0].current_bid + 1}"
-           value="${item.rows[0].current_bid + 1}"/>
-    <button formaction="bid_on_item.jsp" name="auction_id" value="${item.rows[0].auction_id}" type="submit"
-            formmethod="get">Bid On This Item
-    </button>
-</form>
-
-
-<%--TODO: Forum--%>
-
+<c:if test="${item.rows[0].auction_closed != 1 or item.rows[0].account_id != sessionScope.account_id}">
+    Bid on this item:<br/>
+    <form>
+        <c:choose>
+            <c:when test="${account_bids_on.rowCount != 1}">
+                Please Enter Upper Limit (anything above 0 automatically turns on auto-bidding, with increments of $1): <input type="text" name="upper_limit" value="0"/><br>
+            </c:when>
+        </c:choose>
+        Bid amount: <input type="number" name="amount" placeholder="${item.rows[0].current_bid + 1}" value="${item.rows[0].current_bid + 1}"/>
+        <button formaction="bid_on_item.jsp" name="auction_id" value="${item.rows[0].auction_id}" type="submit" formmethod="get">Submit</button><b/>
+    </form>
+</c:if>
 
 <sql:query dataSource="${dataSource}" var="bid_history">
     select a.first_name,
@@ -171,6 +172,7 @@ Alexander Goodkind amg540
     and au.item_id = ci.item_id
     and ci.item_name LIKE '%<c:out value="${item.rows[0].item_name}" escapeXml="true"/>%' and au.auction_id <> ${param.auction_id};
 </sql:query>
+
 <c:if test="${not empty similar_items.rows}">
     <h3>Similar Items up for Auction:</h3>
     <table border="1" cellpadding="5">

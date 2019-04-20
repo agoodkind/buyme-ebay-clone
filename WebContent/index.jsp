@@ -148,16 +148,19 @@ Michael Wang mtw95
                                         </c:otherwise>
                             </c:choose></td>
 
-                            <c:if test="${row.auction_closed == 1}">
-                                <td>
-                                    Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
-                                    <form>
-                                        <button value="${row.highest_bidder_email_address}" name="email_address"
+
+                                <c:if test="${row.auction_closed == 1 && reserve_not_met == 0}">
+                                    <td>
+                                        Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
+                                        <form>
+                                            <button value="${row.highest_bidder_email_address}" name="email_address"
                                                 formaction="contact_form.jsp">contact
-                                        </button>
-                                    </form>
-                                </td>
-                            </c:if>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </c:if>
+
+
                             <td>
                                 <form>
                                     <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">

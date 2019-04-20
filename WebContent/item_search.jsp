@@ -33,6 +33,13 @@ Alexander Goodkind amg540
     <input type="checkbox" name="auction_search" value="true">Search Auctions (Requires Advanced Search)<br/>
     <button formmethod="get" formaction="item_search.jsp">Search</button>
     <br/>
+    <select>
+        <option value="item_type">Item Type</option>
+        <option value="size">Size</option>
+        <option value="gender">Gender</option>
+        <option value="current_bid">Current Bid</option>
+        <option value="closing_datetime">Closing Date</option>
+    </select>
     <button formmethod="get" name="advanced" value="true" formaction="item_search.jsp">Continue to Advanced Search
     </button>
 </form>
@@ -44,9 +51,16 @@ Alexander Goodkind amg540
     </c:when>
     <c:when test="${not empty param.s_query and empty param.advanced and empty param.forwarded_from}">
         <sql:query dataSource="${dataSource}" var="results">
-            select a.auction_id, ci.item_name, ci.item_type, ci.item_id from
-            Clothing_Item ci, Auction a
-            where item_name LIKE '%<c:out value="${param.s_query}" escapeXml="true"/>%';
+            select *
+            from List_Active_Auctions join Clothing_Item
+            where NOW() < closing_datetime
+            and ci.item_id = a.item_id
+            and a.closing_datetime > NOW()
+            and item_name LIKE '%<c:out value="${param.s_query}" escapeXml="true"/>%'
+            <c:if test="${not empty param.column_name}">
+                order by ${param.column_name}  <c:out value="${param.order}"/>
+            </c:if>
+            ;
         </sql:query>
 
 
@@ -71,7 +85,9 @@ Alexander Goodkind amg540
                                         Cookie forward_to = new Cookie("forward_to", "individual_item.jsp");
                                         response.addCookie(forward_to);
                                     %>
-                                    <button value="${row.auction_id}" name="item_id" formaction="view_auction.jsp">View Auction</button>
+                                    <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">
+                                        View Auction
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -133,10 +149,14 @@ Alexander Goodkind amg540
 
                                         <c:when test="${auction_search == 'true' and not empty row.auction_id}">
                                             ${row.auction_id}
-                                            <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button>
+                                            <button value="${row.auction_id}" name="auction_id"
+                                                    formaction="view_auction.jsp">View Auction
+                                            </button>
                                         </c:when>
                                         <c:otherwise>
-                                            <button value="${row.item_id}" name="item_id" formaction="individual_item.jsp">View Item</button>
+                                            <button value="${row.item_id}" name="item_id"
+                                                    formaction="individual_item.jsp">View Item
+                                            </button>
                                         </c:otherwise>
                                     </c:choose>
                                 </form>
@@ -150,9 +170,9 @@ Alexander Goodkind amg540
                 No results found.
             </c:otherwise>
         </c:choose>
-        <c:remove var="field_list" scope="session" />
-        <c:remove var="field_values" scope="session" />
-        <c:remove var="advanced_query" scope="session" />
+        <c:remove var="field_list" scope="session"/>
+        <c:remove var="field_values" scope="session"/>
+        <c:remove var="advanced_query" scope="session"/>
     </c:when>
 </c:choose>
 

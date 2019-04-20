@@ -92,6 +92,9 @@ Alexander Goodkind amg540
 </form>
 
 
+<%--TODO: Forum--%>
+
+
 <sql:query dataSource="${dataSource}" var="bid_history">
     select a.first_name,
     a.last_name,

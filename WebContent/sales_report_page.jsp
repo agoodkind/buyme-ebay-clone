@@ -63,11 +63,8 @@ Michael Wang mtw95
 
 <%--EARNINGS PER END USER--%>
 <sql:query dataSource="${dataSource}" var="earnings_per_end_user">
-<<<<<<< HEAD
+
  	SELECT a.id, SUM(p.current_bid) as earnings
-=======
-    SELECT a.id as account_id, SUM(p.current_bid) as earnings
->>>>>>> 6643d50510eb4be4fa4f850bd745d89fd77d1722
     from Auction p, Account_Sells_In_Auction ac, Account a
     where closing_datetime< NOW() and current_bid>=min_price and p.auction_id = ac.auction_id and ac.account_id = a.id
     GROUP BY a.id

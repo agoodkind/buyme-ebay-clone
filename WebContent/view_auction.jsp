@@ -70,25 +70,26 @@ Alexander Goodkind amg540
 </c:choose>
 
 <p>Seller: <c:out value="${item.rows[0].first_name} ${item.rows[0].last_name}"/></p>
-<c:choose>
-    <c:when test="${empty param.amount}">
-        <form>
-            <input type="number" name="amount" placeholder="${item.rows[0].current_bid + 1}" value="${item.rows[0].current_bid + 1}"/>
-            <button formaction="view_auction.jsp" name="auction_id" value="${item.rows[0].auction_id}" type="submit" formmethod="get">Bid On This Item</button>
-        </form>
-    </c:when>
-    <c:otherwise>
-        <sql:transaction dataSource="${dataSource}">
-            <sql:update var="place_bid">
-                insert into Manually_Bid_On(${param.amount},${param.auction_id},${cookie.account_id.value});
-            </sql:update>
 
-            <c:if test="${place_bid > 0}">
-                A <c:out value="${param.amount}"/> placed successfully
-            </c:if>
-        </sql:transaction>
-    </c:otherwise>
-</c:choose>
+<sql:query var="account_bids_on" dataSource="${dataSource}">
+    select * from Account_Bids_On_Auction abo where abo.account_id = ${sessionScope.account_id} and abo.auction_id
+    = ${param.auction_id};
+</sql:query>
+
+
+
+<form>
+    <c:choose>
+        <c:when test="${account_bids_on.rowCount != 1}">
+            Please Enter Upper Limit (anything above 0 automatically turns on auto-bidding, with increments of $1): <input type="text" name="upper_limit" value="0"/><br>
+        </c:when>
+    </c:choose>
+    <input type="number" name="amount" placeholder="${item.rows[0].current_bid + 1}"
+           value="${item.rows[0].current_bid + 1}"/>
+    <button formaction="bid_on_item.jsp" name="auction_id" value="${item.rows[0].auction_id}" type="submit"
+            formmethod="get">Bid On This Item
+    </button>
+</form>
 
 
 <sql:query dataSource="${dataSource}" var="bid_history">
@@ -96,6 +97,7 @@ Alexander Goodkind amg540
     a.last_name,
     b.amount,
     a.id,
+    b.auction_id,
     a.email_address
     from Bids b,
     Account a
@@ -103,17 +105,6 @@ Alexander Goodkind amg540
     and b.auction_id = ${param.auction_id}
     ORDER BY b.amount desc;
 </sql:query>
-
-<c:if test="${not empty param.delete_bid}">
-    <sql:update dataSource="${dataSource}" var="delete_from_bid_manual">
-        delete from Manually_Bid_On where amount = ${param.amount} and account_id = ${cookie.account_id.value} and auction_id = ${param.auction_id};
-    </sql:update>
-    <c:if test="${delete_from_bid_manual < 1}">
-        <sql:update dataSource="${dataSource}" var="delete_from_bid_manual">
-            delete from Auto_Bid_On where amount = ${param.amount} and account_id = ${cookie.account_id.value} and auction_id = ${param.auction_id};
-        </sql:update>
-    </c:if>
-</c:if>
 
 <c:choose>
     <c:when test="${not empty bid_history.rows}">
@@ -141,7 +132,9 @@ Alexander Goodkind amg540
                                 <input type="hidden" name="amount" value="${row.amount}">
                                 <input type="hidden" name="account_id" value="${row.account_id}">
                                 <input type="hidden" name="delete_bid" value="true">
-                                <button formaction="view_auction.jsp" value="${row.auction_id}" name="auction_id" type="submit" formmethod="post">Delete Bid</button>
+                                <button formaction="delete_bid.jsp" value="${row.auction_id}" name="auction_id"
+                                        type="submit" formmethod="get">Delete Bid
+                                </button>
                             </form>
                         </td>
                     </c:if>
@@ -173,7 +166,7 @@ Alexander Goodkind amg540
     where ac.id = asi.account_id
     and asi.auction_id = au.auction_id
     and au.item_id = ci.item_id
-    and ci.item_name LIKE '%${item.rows[0].item_name}%' and au.auction_id <> ${param.auction_id};
+    and ci.item_name LIKE '%<c:out value="${item.rows[0].item_name}" escapeXml="true"/>%' and au.auction_id <> ${param.auction_id};
 </sql:query>
 <c:if test="${not empty similar_items.rows}">
     <h3>Similar Items up for Auction:</h3>

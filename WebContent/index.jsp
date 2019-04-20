@@ -12,8 +12,6 @@ Alexander Goodkind amg540,
 Amulya Mummaneni asm229,
 Madhumitha Sivaraj ms2407,
 Michael Wang mtw95
-
-  TODO: end auction early (update end time to NOW())
 --%>
 
 
@@ -36,6 +34,37 @@ Michael Wang mtw95
     <c:when test="${cookie.containsKey('logged_in') and not empty sessionScope}">
         <t:logged_in_header/>
 
+        <sql:query dataSource="${dataSource}" var="account_details">
+            select *
+            from Account
+            where id = ${cookie.account_id.value};
+        </sql:query>
+
+        <h1>My Dashboard</h1>
+        <h3>Welcome <c:out
+                value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"/></h3>
+        <%--        add customer representative stuff here if account_type is correct--%>
+        <%--        add admin  stuff here if account_type is correct--%>
+        <c:if test="${sessionScope.account_type == 'Administrator' or  sessionScope.account_type == 'Customer Service Representative'}">
+            <p style="background-color: red; color: white;">
+                <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
+                    You are a Customer Service Representative.
+                </c:if>
+                <c:if test="${sessionScope.account_type == 'Administrator'}">
+                    You are an Administrator.<br/>
+                </c:if>
+                A red background indicates an Administrative-<b>ONLY</b> area, potentially destructive actions are
+                possible.<br/></p>
+            <form style="background-color: red;">
+                <c:if test="${sessionScope.account_type == 'Administrator'}">
+                    <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts
+                    </button>
+                    <br/>
+                </c:if>
+                <button formmethod="get" type="submit" formaction="#">Sales Reports & Metrics</button>
+                <br/>
+            </form>
+        </c:if>
 
         <sql:query dataSource="${dataSource}" var="result">
             select ci.item_name,
@@ -81,90 +110,65 @@ Michael Wang mtw95
             order by closing_datetime desc;
         </sql:query>
 
-        <sql:query dataSource="${dataSource}" var="account_details">
-            select *
-            from Account
-            where id = ${cookie.account_id.value};
-        </sql:query>
+        <c:choose>
+            <c:when test="${result.rowCount > 0}">
+                <p>Here are the auctions you have participated in as a buyer (bidder):
+                <p>
+                <table border="1" cellpadding="5">
+                    <tr>
+                        <th>Item</th>
+                        <th>Current Bid</th>
+                        <th></th>
+                    </tr>
 
-        <h1>My Dashboard</h1>
-        <h3>Welcome <c:out
-                value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"/></h3>
-        <%--        add customer representative stuff here if account_type is correct--%>
-        <%--        add admin  stuff here if account_type is correct--%>
-        <c:if test="${sessionScope.account_type == 'Administrator' or  sessionScope.account_type == 'Customer Service Representative'}">
-            <p style="background-color: red; color: white;">
-                <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
-                    You are a Customer Service Representative.
-                </c:if>
-                <c:if test="${sessionScope.account_type == 'Administrator'}">
-                    You are an Administrator.<br/>
-                </c:if>
-                A red background indicates an Administrative-<b>ONLY</b> area, potentially destructive actions are
-                possible.<br/></p>
-            <form style="background-color: red;">
-                <c:if test="${sessionScope.account_type == 'Administrator'}">
-                    <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts
-                    </button>
-                    <br/>
-                </c:if>
-                <button formmethod="get" type="submit" formaction="#">Sales Reports & Metrics</button>
-                <br/>
-            </form>
-        </c:if>
-        
-        <p>Here are the auctions you have participated in as a buyer (bidder):
-        <p>
+                    <c:forEach var="row" items="${result.rows}">
+                        <tr>
+                            <td><c:out value="${row.item_name}"/></td>
+                            <td>
+                                <c:out value="${row.current_bid}"/>
+                            </td>
+                            <td><c:choose>
+                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 1}">
+                                    you lost the auction
+                                </c:when>
 
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>Item</th>
-                <th>Current Bid</th>
-                <th></th>
-            </tr>
+                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 0}">
+                                    You won the auction
+                                </c:when>
 
-            <c:forEach var="row" items="${result.rows}">
-                <tr>
-                    <td><c:out value="${row.item_name}"/></td>
-                    <td>
-                        <c:out value="${row.current_bid}"/>
-                    </td>
-                    <td><c:choose>
-                        <c:when test="${row.auction_closed == 1 && row.lost_auction == 1}">
-                            you lost the auction
-                        </c:when>
+                                <c:otherwise>
+                                    Auction has not ended
+                                </c:otherwise>
+                            </c:choose></td>
 
-                        <c:when test="${row.auction_closed == 1 && row.lost_auction == 0}">
-                            You won the auction
-                        </c:when>
-
-                        <c:otherwise>
-                            Auction has not ended
-                        </c:otherwise>
-                    </c:choose></td>
-
-                    <c:if test="${row.auction_closed == 1}">
-                        <td>
-                            Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
-                            <form>
-                                <button value="${row.highest_bidder_email_address}" name="email_address"
-                                        formaction="contact_form.jsp">contact
-                                </button>
-                            </form>
-                        </td>
-                    </c:if>
+                            <c:if test="${row.auction_closed == 1}">
+                                <td>
+                                    Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
+                                    <form>
+                                        <button value="${row.highest_bidder_email_address}" name="email_address"
+                                                formaction="contact_form.jsp">contact
+                                        </button>
+                                    </form>
+                                </td>
+                            </c:if>
+                            <td>
+                                <form>
+                                    <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">
+                                        View
+                                        Auction
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>
+            <c:otherwise>
+                You have not participated in any auctions.
+            </c:otherwise>
+        </c:choose>
 
 
-                    <td>
-                        <form>
-                            <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View
-                                Auction
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
         <sql:query dataSource="${dataSource}" var="all_items">
             select *
             from List_Active_Auctions
@@ -172,38 +176,63 @@ Michael Wang mtw95
             order by closing_datetime desc;
         </sql:query>
 
-        <p>Here are the auctions that you have started:</p>
+        <c:choose>
+            <c:when test="${all_items.rowCount > 0}">
+                <p>Here are the auctions that you have started:</p>
 
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>Item Name</th>
-                <th>Item Category</th>
-                <th>Current Bid</th>
-                <th>End Date</th>
-            </tr>
+                <table border="1" cellpadding="5">
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Item Category</th>
+                        <th>Current Bid</th>
+                        <th>End Date</th>
+                    </tr>
 
-            <c:forEach var="row" items="${all_items.rows}">
-                <tr>
-                    <td><c:out value="${row.item_name}"/></td>
-                    <td><c:out value="${row.item_type}"/></td>
-                    <td><c:out value="${row.current_bid}"/></td>
-                    <td><c:out value="${row.closing_datetime}"/></td>
+                    <c:forEach var="row" items="${all_items.rows}">
+                        <tr>
+                            <td><c:out value="${row.item_name}"/></td>
+                            <td><c:out value="${row.item_type}"/></td>
+                            <td><c:out value="${row.current_bid}"/></td>
+                            <td><c:out value="${row.closing_datetime}"/></td>
 
-                    <td>
-                        <form>
-                            <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View
-                                Auction
-                            </button>
-                        </form>
-                    </td>
-                    <c:if test="${row.auction_closed == 1}"><td>Auction Closed</td></c:if>
-                    <c:if test="${row.auction_closed == 1 and row.current_bid >= row.min_price}"><td><form><button value="${row.highest_bidder_email_address}" name="email_address" formaction="contact_form.jsp">Contact Winner</button></form></td></c:if>
-                </tr>
-            </c:forEach>
-        </table>
-
+                            <td>
+                                <form>
+                                    <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">
+                                        View
+                                        Auction
+                                    </button>
+                                </form>
+                            </td>
+                            <c:if test="${row.auction_closed == 1}">
+                                <td>Auction Closed</td>
+                            </c:if>
+                            <c:if test="${row.auction_closed == 1 and row.current_bid >= row.min_price}">
+                                <td>
+                                    <form>
+                                        <button value="${row.highest_bidder_email_address}" name="email_address"
+                                                formaction="contact_form.jsp">Contact Winner
+                                        </button>
+                                    </form>
+                                </td>
+                            </c:if>
+                            <c:if test="${row.auction_closed != 1}">
+                                <td>
+                                    <form>
+                                        <button name="end_auction_id" formaction="end_auction.jsp"
+                                                value="${row.auction_id}">End Auction
+                                        </button>
+                                    </form>
+                                </td>
+                            </c:if>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:when>
+            <c:otherwise>
+                You have not started any auctions.
+            </c:otherwise>
+        </c:choose>
     </c:when>
-
     <c:otherwise> <!-- if logged out -->
         <form>
             <button formmethod="post" type="submit" formaction="login_form.jsp">Login</button>

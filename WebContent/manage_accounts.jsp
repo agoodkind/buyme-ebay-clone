@@ -151,9 +151,6 @@
                     <button formaction="manage_accounts.jsp" value="submit_create_account" type="submit">Submit</button>
                 </form>
             </c:when>
-            <c:otherwise>
-                <button formaction="manage_accounts.jsp" value="true" name="create_account" type="submit">Create Account</button>
-            </c:otherwise>
             <c:when test="${not empty param.delete_account_id}">
                 <sql:update dataSource="${dataSource}" var="delete_account">
                     delete from Account where id = ${param.delete_account_id};
@@ -167,59 +164,66 @@
                     </c:otherwise>
                 </c:choose>
             </c:when>
+            <c:otherwise>
+                <button formaction="manage_accounts.jsp" value="true" name="create_account" type="submit">Create Account</button><br/>
+                <sql:query var="all_accounts" dataSource="${dataSource}">
+                    select * from Account;
+                </sql:query>
+                <c:if test="${sessionScope.account_type != 'Administrator'}">
+                    Only administrators can delete accounts
+                </c:if>
+
+                <table border="1" cellpadding="5">
+                    <tr>
+                        <th>Account ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email Address</th>
+                        <th>Account Type</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                    <c:forEach var="row" items="${all_accounts.rows}">
+                        <tr>
+                            <td><c:out value="${row.id}"></c:out></td>
+                            <td><c:out value="${row.first_name}"/></td>
+                            <td><c:out value="${row.last_name}"/></td>
+                            <td><c:out value="${row.email_address}"/></td>
+                            <td><c:out value="${row.account_type}"/></td>
+                            <td>
+                                <form>
+                                    <button value="${row.id}" name="update_account_id" formaction="manage_accounts.jsp">
+                                        edit account
+                                    </button>
+                                </form>
+                            </td>
+
+                            <td style="background-color: red">
+                                <form style="background-color: red">
+                                    <button
+                                            <c:if test="${sessionScope.account_type != 'Administrator'}">disabled</c:if>
+                                            value="${row.id}" name="delete_account_id"
+                                            formaction="manage_accounts.jsp">delete
+                                        account
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form>
+                                    <button value="${row.id}" name="delete_account_id" formaction="view_user.jsp">view user
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:otherwise>
         </c:choose>
 
-        <sql:query var="all_accounts" dataSource="${dataSource}">
-            select * from Account;
-        </sql:query>
-        <c:if test="${sessionScope.account_type != 'Administrator'}">
-            Only administrators can delete accounts
-        </c:if>
 
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email Address</th>
-                <th>Account Type</th>
-                <th></th>
-                <th></th>
-            </tr>
-
-            <c:forEach var="row" items="${all_accounts.rows}">
-                <tr>
-                    <td><c:out value="${row.first_name}"/></td>
-                    <td><c:out value="${row.last_name}"/></td>
-                    <td><c:out value="${row.email_address}"/></td>
-                    <td><c:out value="${row.account_type}"/></td>
-                    <td>
-                        <form>
-                            <button value="${row.id}" name="update_account_id" formaction="manage_accounts.jsp">
-                                edit account
-                            </button>
-                        </form>
-                    </td>
-
-                    <td style="background-color: red">
-                        <form style="background-color: red">
-                            <button
-                                    <c:if test="${sessionScope.account_type != 'Administrator'}">disabled</c:if>
-                                    value="${row.account_id}" name="delete_account_id"
-                                    formaction="manage_accounts.jsp">delete
-                                account
-                            </button>
-                        </form>
-                    </td>
-                    <td>
-                        <form>
-                            <button value="${row.account_id}" name="account_id" formaction="view_user.jsp">view user
-                            </button>
-                        </form>
-                    </td>
-
-                </tr>
-            </c:forEach>
-        </table>
 
 
     </c:when>

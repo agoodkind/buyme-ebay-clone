@@ -199,9 +199,11 @@ Michael Wang mtw95
                         </form>
                     </td>
 
-                    <td><c:if test="${row.auction_closed == 1}">
-                        Auction Closed
-                    </c:if></td>
+                    <c:if test="${row.auction_closed == 1}">
+                        <td>
+                            Auction Closed
+                        </td>
+                    </c:if>
 
                     <c:if test="${row.auction_closed == 1}">
                         <td>
@@ -210,6 +212,14 @@ Michael Wang mtw95
                                 <button value="${row.highest_bidder_email_address}" name="email_address"
                                         formaction="contact_form.jsp">contact
                                 </button>
+                            </form>
+                        </td>
+                    </c:if>
+
+                    <c:if test="${row.auction_closed != 1}">
+                        <td>
+                            <form>
+                                <button name="end_auction_id" formaction="end_auction.jsp" value="${row.auction_id}">End Auction</button>
                             </form>
                         </td>
                     </c:if>

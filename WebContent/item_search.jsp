@@ -10,6 +10,7 @@
 <%--
 Contributers:
 Alexander Goodkind amg540
+Amulya Mummaneni asm229
 --%>
 <!DOCTYPE html>
 <html>
@@ -83,8 +84,9 @@ Alexander Goodkind amg540
                         <th>Size</th>
                         <th>Gender</th>
                         <th>Current Bid</th>
-                        <th>Auction Status</th>
                         <th>End Date</th>
+                        <th>Seller</th>
+                        <th>Auction Status</th>
                         <th></th>
                     </tr>
 
@@ -98,6 +100,10 @@ Alexander Goodkind amg540
                                 $<c:out value="${row.current_bid}"/>
                             </td>
                             <td><c:out value="${row.closing_datetime}"/></td>
+
+                            <td><c:out value="${row.first_name}"/> <c:out
+                                    value="${row.last_name}"/> <c:out
+                                    value="${row.email_address}"/></td>
 
                             <td><c:choose>
                                 <c:when test="${row.auction_closed == 1 && row.reserve_not_met == 1}">
@@ -118,16 +124,7 @@ Alexander Goodkind amg540
                                     </c:choose>
                                 </c:otherwise>
                             </c:choose></td>
-                            <c:if test="${row.auction_closed == 1 && reserve_not_met == 0}">
-                                <td>
-                                    Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
-                                    <form>
-                                        <button value="${row.highest_bidder_email_address}" name="email_address"
-                                                formaction="contact_form.jsp">contact
-                                        </button>
-                                    </form>
-                                </td>
-                            </c:if>
+
                             <td>
                                 <form>
                                     <c:set var="forward_to" value="individual_item.jsp" scope="session"/>
@@ -160,55 +157,44 @@ Alexander Goodkind amg540
                     <tr>
                         <th>Item Name</th>
                         <th>Item Type</th>
+                        <th>Size</th>
+                        <th>Gender</th>
                         <c:forEach var="field_name" items="${field_list}">
                             <th>${field_name}</th>
                         </c:forEach>
-                        <c:if test="${auction_search == 'true'}">
-                            <th>Current Bid</th>
-                            <th>Seller</th>
-                            <th>End date</th>
-                        </c:if>
+                        <th>Current Bid</th>
+                        <th>Seller</th>
+                        <th>End date</th>
+
                     </tr>
 
                     <c:forEach var="row" items="${advanced_results.rows}">
                         <tr>
                             <td><c:out value="${row.item_name}"/></td>
                             <td><c:out value="${row.item_type}"/></td>
+                            <td><c:out value="${row.size}"/></td>
+                            <td><c:out value="${row.gender}"/></td>
                             <c:forEach var="field_value" items="${field_values}">
                                 <td>${field_value}</td>
                             </c:forEach>
-                            <c:choose>
 
-                                <c:when test="${auction_search == 'true' and not empty row.auction_id}">
-                                    <td>$<c:out value="${row.current_bid}"/></td>
-                                    <sql:query dataSource="${dataSource}" var="row_result">
-                                        select a.first_name, a.last_name, a.email_address
-                                        from Account_Sells_In_Auction asia, Account a
-                                        where asia.auction_id = ${row.auction_id};
-                                    </sql:query>
-                                    <td><c:out value="${row_result.rows[0].first_name}"/> <c:out
-                                            value="${row_result.rows[0].last_name}"/> <c:out
-                                            value="${row_result.rows[0].email_address}"/></td>
+                            <td>$<c:out value="${row.current_bid}"/></td>
+                            <sql:query dataSource="${dataSource}" var="row_result">
+                                select a.first_name, a.last_name, a.email_address
+                                from Account_Sells_In_Auction asia, Account a
+                                where asia.auction_id = ${row.auction_id};
+                            </sql:query>
+                            <td><c:out value="${row_result.rows[0].first_name}"/> <c:out
+                                    value="${row_result.rows[0].last_name}"/> <c:out
+                                    value="${row_result.rows[0].email_address}"/></td>
 
-                                    <td><c:out value="${row.closing_datetime}"/></td>
-                                </c:when>
-                            </c:choose>
+                            <td><c:out value="${row.closing_datetime}"/></td>
+
                             <td>
                                 <form>
-                                    <c:choose>
-
-                                        <c:when test="${auction_search == 'true' and not empty row.auction_id}">
-                                            ${row.auction_id}
-                                            <button value="${row.auction_id}" name="auction_id"
-                                                    formaction="view_auction.jsp">View Auction
-                                            </button>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <button value="${row.item_id}" name="item_id"
-                                                    formaction="individual_item.jsp">View Item
-                                            </button>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <button value="${row.auction_id}" name="auction_id"
+                                            formaction="view_auction.jsp">View Auction
+                                    </button>
                                 </form>
                             </td>
 

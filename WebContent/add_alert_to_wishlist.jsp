@@ -17,7 +17,7 @@ Alexander Goodkind amg540
 <%@ page import="java.io.*,java.util.*,java.sql.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
+<%@ page import="org.apache.commons.lang.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,7 +70,7 @@ Alexander Goodkind amg540
             field_values[i] = request.getParameter(field_list[i]);
         }
 // insert into relative clothing type
-        String insert = "insert into " + item_type + "(item_id, " + StringUtils.join(field_list, ",") + ") values(" + item_id_string + "," + StringUtils.join(field_values, ",") + ")";
+        String insert = "insert into " + StringEscapeUtils.escapeHtml(item_type) + "(item_id, " + StringUtils.join(field_list, ",") + ") values(" + item_id_string + "," + StringUtils.join(field_values, ",") + ")";
 
         ps = con.prepareStatement(insert);
 

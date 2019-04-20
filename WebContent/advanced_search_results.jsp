@@ -13,7 +13,7 @@
 <%@ page import="java.io.*,java.util.*,java.sql.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
+<%@ page import="org.apache.commons.lang.*" %>
 
 <!DOCTYPE html>
 <html>
@@ -67,7 +67,7 @@
 
         queryBuilder += " from Clothing_Item ci inner join " + item_type + " t1 on ci.item_id = t1.item_id" +
                 " left join (select * from Auction where closing_datetime > NOW()) t2 on ci.item_id = t2.item_id" +
-                " where item_name LIKE '%" + s_query + "%'";
+                " where item_name LIKE '%" + StringEscapeUtils.escapeHtml(s_query) + "%'";
 
         queryBuilder += " AND";
 

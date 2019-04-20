@@ -112,7 +112,8 @@ Michael Wang mtw95
 
         <c:choose>
             <c:when test="${result.rowCount > 0}">
-                <p>Here are the auctions you have participated in as a buyer (bidder):<p>
+                <p>Here are the auctions you have participated in as a buyer (bidder):
+                <p>
                 <table border="1" cellpadding="5">
                     <tr>
                         <th>Item</th>
@@ -174,6 +175,7 @@ Michael Wang mtw95
             where account_id = ${cookie.account_id.value}
             order by closing_datetime desc;
         </sql:query>
+
         <c:choose>
             <c:when test="${all_items.rowCount > 0}">
                 <p>Here are the auctions that you have started:</p>
@@ -213,13 +215,15 @@ Michael Wang mtw95
                                     </form>
                                 </td>
                             </c:if>
-                          <c:if test="${row.auction_closed != 1}">
-                        <td>
-                            <form>
-                                <button name="end_auction_id" formaction="end_auction.jsp" value="${row.auction_id}">End Auction</button>
-                            </form>
-                        </td>
-                    </c:if>
+                            <c:if test="${row.auction_closed != 1}">
+                                <td>
+                                    <form>
+                                        <button name="end_auction_id" formaction="end_auction.jsp"
+                                                value="${row.auction_id}">End Auction
+                                        </button>
+                                    </form>
+                                </td>
+                            </c:if>
                         </tr>
                     </c:forEach>
                 </table>

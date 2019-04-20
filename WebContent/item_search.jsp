@@ -29,18 +29,24 @@ Alexander Goodkind amg540
 
 
 <form>
-    <input type="text" minlength="3" name="s_query" placeholder="Search.."/><br/>
+    Search query: <input type="text" minlength="3" name="s_query" placeholder="Search.."/><br/>
+    Sort by:
+    <select>
+        <option name="column_name" value="item_type">Item Type</option>
+        <option name="column_name" value="size">Size</option>
+        <option name="column_name" value="gender">Gender</option>
+        <option name="column_name" value="current_bid">Current Bid</option>
+        <option name="column_name" value="closing_datetime">Closing Date</option>
+    </select><br>
+    Order:
+    <select>
+        <option name="order_by" value="asc">Ascending</option>
+        <option name="order_by" value="desc">Descending</option>
+    </select>
     <button formmethod="get" formaction="item_search.jsp">Search</button>
     <br/>
-    <select>
-        <option value="item_type">Item Type</option>
-        <option value="size">Size</option>
-        <option value="gender">Gender</option>
-        <option value="current_bid">Current Bid</option>
-        <option value="closing_datetime">Closing Date</option>
-    </select>
     <button formmethod="get" name="advanced" value="true" formaction="item_search.jsp">Continue to Advanced Search
-    </button>
+    </button><br><br>
 </form>
 <c:choose>
     <c:when test="${not empty param.advanced}">
@@ -51,16 +57,18 @@ Alexander Goodkind amg540
     <c:when test="${not empty param.s_query and empty param.advanced and empty param.forwarded_from}">
         <sql:query dataSource="${dataSource}" var="results">
             select *
-            from List_Active_Auctions join Clothing_Item
+            from List_Active_Auctions l join Clothing_Item c
             where NOW() < closing_datetime
-            and ci.item_id = a.item_id
-            and a.closing_datetime > NOW()
-            and item_name LIKE '%<c:out value="${param.s_query}" escapeXml="true"/>%'
+            and l.item_id = c.item_id
+            and closing_datetime > NOW()
+            and c.item_name LIKE '%<c:out value="${param.s_query}" escapeXml="true"/>%'
             <c:if test="${not empty param.column_name}">
-                order by ${param.column_name}  <c:out value="${param.order}"/>
+                order by ${param.column_name}  <c:out value="${param.order_by}"/>
             </c:if>
             ;
         </sql:query>
+
+
         <c:choose>
             <c:when test="${not empty results}">
                 <table border="1" cellpadding="5">
@@ -74,6 +82,7 @@ Alexander Goodkind amg540
                         <tr>
                             <td><c:out value="${row.item_name}"/></td>
                             <td><c:out value="${row.item_type}"/></td>
+
                             <td>
                                 <form>
                                     <c:set var="forward_to" value="individual_item.jsp" scope="session"/>

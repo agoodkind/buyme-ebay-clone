@@ -28,7 +28,7 @@ Michael Wang mtw95
 
 <%--TOTAL EARNINGS --%>
 <sql:query dataSource="${dataSource}" var="total_earnings">
-    SELECT SUM(current_bid) as t_e 
+    SELECT SUM(current_bid) as total
     from Auction
     where closing_datetime< NOW() 
     	and current_bid>=min_price;
@@ -36,7 +36,7 @@ Michael Wang mtw95
 
 <%--EARNINGS PER ITEM--%>
 <sql:query dataSource="${dataSource}" var="earnings_per_item">
-    SELECT p.auction_id as a, p.current_bid as b
+    SELECT p.auction_id as auction_id, p.current_bid as current_bid
     from Auction p 
     where closing_datetime< NOW() and current_bid>=min_price
     order by p.current_bid DESC;
@@ -44,7 +44,7 @@ Michael Wang mtw95
 
 <%--EARNINGS PER ITEM TYPE--%>
 <sql:query dataSource="${dataSource}" var="earnings_per_item_type">
-    SELECT c.item_type as type, SUM(a.current_bid) as earnings
+    SELECT c.item_type as item_type, SUM(a.current_bid) as earnings
     FROM Clothing_Item c, Auction a
     WHERE c.item_id = a.item_id and a.closing_datetime< NOW() 
     	and a.current_bid>=a.min_price
@@ -54,7 +54,7 @@ Michael Wang mtw95
 
 <%--EARNINGS PER END USER--%>
 <sql:query dataSource="${dataSource}" var="earnings_per_end_user">
- 	SELECT a.id as account_id, SUM(p.current_bid) as earnings
+ 	SELECT a.id, SUM(p.current_bid) as earnings
     from Auction p, Account_Sells_In_Auction ac, Account a
     where closing_datetime< NOW() and current_bid>=min_price and p.auction_id = ac.auction_id and ac.account_id = a.id
     GROUP BY a.id
@@ -88,8 +88,8 @@ Michael Wang mtw95
 <h2>Sales Report</h2>
 
 <h3>Total Earnings</h3>
-<c:forEach var="row" items="${earnings_per_item.rows}">
-<c:out value="${row.t_e}"></c:out>
+<c:forEach var="row" items="${total_earnings.rows}">
+<c:out value="$${row.total}"></c:out>
 </c:forEach>
 
 <h3>Earnings Per Item</h3>
@@ -101,8 +101,8 @@ Michael Wang mtw95
 <c:forEach var="row" items="${earnings_per_item.rows}">
 
         <tr>
-            <td><c:out value="${row.a}"></c:out></td>
-            <td><c:out value="${row.b}"></c:out></td>
+            <td><c:out value="${row.auction_id}"></c:out></td>
+            <td><c:out value="$${row.current_bid}"></c:out></td>
         </tr>
 </c:forEach>
 </table>
@@ -116,8 +116,8 @@ Michael Wang mtw95
 <c:forEach var="row" items="${earnings_per_item_type.rows}">
 
         <tr>
-            <td><c:out value="${row.types}"></c:out></td>
-            <td><c:out value="${row.earnings}"></c:out></td>
+            <td><c:out value="${row.item_type}"></c:out></td>
+            <td><c:out value="$${row.earnings}"></c:out></td>
         </tr>
 </c:forEach>
 </table>
@@ -131,8 +131,8 @@ Michael Wang mtw95
 <c:forEach var="row" items="${earnings_per_end_user.rows}">
 
         <tr>
-            <td><c:out value="${row.account_id}"></c:out></td>
-            <td><c:out value="${row.earnings}"></c:out></td>
+            <td><c:out value="${row.id}"></c:out></td>
+            <td><c:out value="$${row.earnings}"></c:out></td>
         </tr>
 </c:forEach>
 </table>

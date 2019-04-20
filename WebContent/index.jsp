@@ -71,7 +71,8 @@ Michael Wang mtw95
             a.auction_id,
             a.closing_datetime,
             if(NOW() > a.closing_datetime, 1, 0) as auction_closed,
-            if(NOW() > a.closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction,
+            if(NOW() > a.closing_datetime and max(b1.amount) < b.current_bid, 1, 0) as lost_auction,
+            if(NOW() > a.closing_datetime and b.current_bid < a.min_price, 1, 0) as reserve_not_met,
             a.current_bid,
             b.account_id,
             (select distinct b.account_id
@@ -128,17 +129,23 @@ Michael Wang mtw95
                                 <c:out value="${row.current_bid}"/>
                             </td>
                             <td><c:choose>
-                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 1}">
-                                    you lost the auction
-                                </c:when>
+                                        <c:when test="${row.auction_closed == 1 && row.reserve_not_met == 1}">
+                                            reserve not met. no one won.
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:choose>
+                                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 1}">
+                                                    you lost the auction
+                                                </c:when>
 
-                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 0}">
-                                    You won the auction
-                                </c:when>
-
-                                <c:otherwise>
-                                    Auction has not ended
-                                </c:otherwise>
+                                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 0}">
+                                                    You won the auction
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Auction has not ended
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:otherwise>
                             </c:choose></td>
 
                             <c:if test="${row.auction_closed == 1}">

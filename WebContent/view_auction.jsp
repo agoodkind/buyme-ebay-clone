@@ -72,7 +72,7 @@ Alexander Goodkind amg540
 <p>Seller: <c:out value="${item.rows[0].first_name} ${item.rows[0].last_name}"/></p>
 
 <sql:query var="account_bids_on" dataSource="${dataSource}">
-    select * from Account_Bids_On_Auction abo where abo.account_id = ${sessionScope.account_id} and abo.auction_id
+    select * from Account_Bids_On_Auction abo where abo.account_id = ${cookie.account_id.value} and abo.auction_id
     = ${param.auction_id};
 </sql:query>
 

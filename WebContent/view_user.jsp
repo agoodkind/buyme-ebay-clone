@@ -14,15 +14,17 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%--Contributers: Alexander Goodkind amg540--%>
 <!DOCTYPE html>
+
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
                    url="${initParam['connectionURL']}"
                    user="${initParam['username']}"
                    password="${initParam['password']}"/>
+
 <sql:query dataSource="${dataSource}" var="account_details">
     select *
     from Account
-    where id = ${param.account_id};
+    where id = ${param.view_account_id};
 </sql:query>
 
 <html>
@@ -38,7 +40,7 @@
 
 <sql:query dataSource="${dataSource}" var="all_items">
     select *
-    from List_Active_Auctions where account_id = ${param.account_id};
+    from List_Active_Auctions where account_id = ${param.view_account_id};
 </sql:query>
 
 <h3><c:out value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}" />'s Profile</h3>
@@ -114,7 +116,7 @@
     Clothing_Item ci
     where a.auction_id = b.auction_id
     and ci.item_id = a.item_id
-    and b.account_id = ${param.account_id};
+    and b.account_id = ${param.view_account_id};
 </sql:query>
 
 
@@ -148,9 +150,7 @@
                 <td>
                     Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
                     <form>
-                        <button value="${row.highest_bidder_email_address}" name="email_address"
-                                formaction="contact_form.jsp">
-                        </button>
+                        <button value="${row.highest_bidder_email_address}" name="email_address" formaction="contact_form.jsp">Contact Winner</button>
                     </form>
                 </td>
             </c:if>

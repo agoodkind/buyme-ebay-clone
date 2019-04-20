@@ -61,8 +61,6 @@ Alexander Goodkind amg540
             </c:if>
             ;
         </sql:query>
-
-
         <c:choose>
             <c:when test="${not empty results}">
                 <table border="1" cellpadding="5">
@@ -76,7 +74,6 @@ Alexander Goodkind amg540
                         <tr>
                             <td><c:out value="${row.item_name}"/></td>
                             <td><c:out value="${row.item_type}"/></td>
-
                             <td>
                                 <form>
                                     <c:set var="forward_to" value="individual_item.jsp" scope="session"/>

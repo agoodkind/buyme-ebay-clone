@@ -60,7 +60,14 @@
                 session.setAttribute("gender", request.getParameter("gender"));
                 session.setAttribute("item_name", request.getParameter("item_name"));
                 String item_type = request.getParameter("item_type");
-                session.setAttribute("item_type", item_type);
+
+                if (request.getParameterMap().containsKey("order_by")) {
+                    session.setAttribute("order_by", request.getParameter("order_by"));
+                }
+                if (request.getParameterMap().containsKey("column_name")) {
+                    item_type = (String) session.getAttribute("column_name");
+                }
+
             %>
             <button formmethod="get" value="true" name="auction_search_continue" formaction="advanced_search.jsp">
                 Continue

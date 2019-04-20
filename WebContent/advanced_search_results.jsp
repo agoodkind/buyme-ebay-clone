@@ -55,11 +55,9 @@
         }
 
 
-
         String queryBuilder = "";
 
         queryBuilder += "select ci.item_id, ci.item_name, if(t2.auction_id, t2.auction_id, 0) as auction_id, ci.item_type, ci.size, ci.gender, t2.auction_id, t2.current_bid, t2.closing_datetime, t2.start_datetime";
-
 
         for (String field_name : field_list) {
             queryBuilder += ", t1." + field_name;
@@ -78,8 +76,14 @@
                 queryBuilder += " AND t1." + field_list[i] + " ="  + field_values[i];
             }
         }
-        if (auction_search == "true") {
-            queryBuilder += " AND t2.auction_id > 0"; // only show items with auctions
+
+        queryBuilder += " AND t2.auction_id > 0";
+
+        if (session.getAttribute("column_name") != null) {
+            queryBuilder += " order by" + (String) session.getAttribute("column_name");
+            if (session.getAttribute("order_by") != null) {
+                queryBuilder += " " + (String) session.getAttribute("order_by");
+            }
         }
 
         queryBuilder += ";";

@@ -78,7 +78,7 @@ Amulya Mummaneni asm229
         </td>
         <td>
             <form>
-                <button value="${result.rows[0].auction_id}" name="auction_id" type="submit" formaction="view_auction.jsp">View Item Details</button>
+                <button value="${result.rows[0].auction_id}" name="auction_id" type="submit" formaction="view_auction.jsp">View Auction</button>
             </form>
         </td>
     </tr>

@@ -1,28 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
-<%@ page import="java.io.*,java.util.*,java.sql.*" %>
-<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
-<%--
-Contributers:
-Alexander Goodkind amg540,
-Amulya Mummaneni asm229,
-Madhumitha Sivaraj ms2407,
-Michael Wang mtw95
---%>
-
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
-    <title>My Dashboard - buyMe.com</title>
+    <title>Sales Report - buyMe</title>
 </head>
 <body>
+
+<t:logged_in_header/>
+
+<%--Contributers:
+Amulya Mummaneni asm229
+Michael Wang mtw95
+--%>
 
 <sql:setDataSource var="dataSource"
                    driver="${initParam['driverClass']}"
@@ -30,216 +26,145 @@ Michael Wang mtw95
                    user="${initParam['username']}"
                    password="${initParam['password']}"/>
 
-<c:choose>
-    <c:when test="${cookie.containsKey('logged_in') and not empty sessionScope}">
-        <t:logged_in_header/>
+<%--TOTAL EARNINGS --%>
+<sql:query dataSource="${dataSource}" var="total_earnings">
+    SELECT SUM(current_bid) as t_e 
+    from Auction
+    where closing_datetime< NOW() 
+    	and current_bid>=min_price;
+</sql:query>
 
-        <sql:query dataSource="${dataSource}" var="account_details">
-            select *
-            from Account
-            where id = ${cookie.account_id.value};
-        </sql:query>
+<%--EARNINGS PER ITEM--%>
+<sql:query dataSource="${dataSource}" var="earnings_per_item">
+    SELECT p.auction_id as a, p.current_bid as b
+    from Auction p 
+    where closing_datetime< NOW() and current_bid>=min_price
+    order by p.current_bid DESC;
+</sql:query>
 
-        <h1>My Dashboard</h1>
-        <h3>Welcome <c:out
-                value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name}!"/></h3>
-        <%--        add customer representative stuff here if account_type is correct--%>
-        <%--        add admin  stuff here if account_type is correct--%>
-        <c:if test="${sessionScope.account_type == 'Administrator' or  sessionScope.account_type == 'Customer Service Representative'}">
-            <p style="background-color: red; color: white;">
-                <c:if test="${sessionScope.account_type == 'Customer Service Representative'}">
-                    You are a Customer Service Representative.
-                </c:if>
-                <c:if test="${sessionScope.account_type == 'Administrator'}">
-                    You are an Administrator.<br/>
-                </c:if>
-                A red background indicates an Administrative-<b>ONLY</b> area, potentially destructive actions are
-                possible.<br/></p>
-            <form style="background-color: red;">
-                <c:if test="${sessionScope.account_type == 'Administrator'}">
-                    <button formmethod="get" type="submit" formaction="manage_accounts.jsp">View and Manage Accounts
-                    </button>
-                    <br/>
-                </c:if>
-                <button formmethod="get" type="submit" formaction="#">Sales Reports & Metrics</button>
-                <br/>
-            </form>
-        </c:if>
+<%--EARNINGS PER ITEM TYPE--%>
+<sql:query dataSource="${dataSource}" var="earnings_per_item_type">
+    SELECT c.item_type as type, SUM(a.current_bid) as earnings
+    FROM Clothing_Item c, Auction a
+    WHERE c.item_id = a.item_id and a.closing_datetime< NOW() 
+    	and a.current_bid>=a.min_price
+    group by item_type
+    order by earnings DESC;
+</sql:query>
 
-        <sql:query dataSource="${dataSource}" var="result">
-            select ci.item_name,
-            a.auction_id,
-            a.closing_datetime,
-            if(NOW() > a.closing_datetime, 1, 0) as auction_closed,
-            if(NOW() > a.closing_datetime and max(b1.amount) > b.current_bid, 1, 0) as lost_auction,
-            a.current_bid,
-            b.account_id,
-            (select distinct b.account_id
-            from Bids b2
-            where b2.auction_id = a.auction_id
-            and b2.amount =
-            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id)) as highest_bidder_account_id,
-            (select a1.first_name
-            from Account a1
-            where a1.id = (select distinct b.account_id
-            from Bids b2
-            where b2.auction_id = a.auction_id
-            and b2.amount =
-            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id))) as highest_bidder_first_name,
-            (select a1.last_name
-            from Account a1
-            where a1.id = (select distinct b.account_id
-            from Bids b2
-            where b2.auction_id = a.auction_id
-            and b2.amount =
-            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id))) as highest_bidder_last_name,
-            (select a1.email_address
-            from Account a1
-            where a1.id = (select distinct b.account_id
-            from Bids b2
-            where b2.auction_id = a.auction_id
-            and b2.amount =
-            (select max(amount) from Bids b3 where b3.auction_id = a.auction_id))) as highest_bidder_email_address
-            from Auction a,
-            Account_Bids_On_Auction b,
-            Bids b1,
-            Clothing_Item ci
-            where a.auction_id = b.auction_id
-            and ci.item_id = a.item_id
-            and b.account_id = ${cookie.account_id.value}
-            order by closing_datetime desc;
-        </sql:query>
+<%--EARNINGS PER END USER--%>
+<sql:query dataSource="${dataSource}" var="earnings_per_end_user">
+ 	SELECT a.id as id, SUM(p.current_bid) as earnings
+    from Auction p, Account_Sells_In_Auction ac, Account a
+    where closing_datetime< NOW() and current_bid>=min_price and p.auction_id = ac.auction_id and ac.account_id = a.id
+    GROUP BY a.id
+    order by earnings DESC;
+</sql:query>
 
-        <c:choose>
-            <c:when test="${result.rowCount > 0}">
-                <p>Here are the auctions you have participated in as a buyer (bidder):
-                <p>
-                <table border="1" cellpadding="5">
-                    <tr>
-                        <th>Item</th>
-                        <th>Current Bid</th>
-                        <th></th>
-                    </tr>
+<%--BEST SELLING ITEMS (best selling item = the items/auctions with most bids)--%>
+<%-- top 5 items --%>
+<sql:query dataSource="${dataSource}" var="best_selling_items">
+    SELECT b.auction_id as id, COUNT(distinct b.account_id) as count 
+    FROM Bids b
+    group by b.auction_id
+    order by count DESC 
+    LIMIT 5;
+</sql:query>
 
-                    <c:forEach var="row" items="${result.rows}">
-                        <tr>
-                            <td><c:out value="${row.item_name}"/></td>
-                            <td>
-                                <c:out value="${row.current_bid}"/>
-                            </td>
-                            <td><c:choose>
-                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 1}">
-                                    you lost the auction
-                                </c:when>
+<%--BEST SELLING USERS (best selling users = the end users with most closed auctions)--%>
+<%-- top 5 users --%>
+<sql:query dataSource="${dataSource}" var="best_selling_users">
+    SELECT id, t1.count as count
+	from (
+		SELECT c.id, COUNT(*) as count 
+		from Account c, Auction d, Account_Sells_In_Auction p
+		where d.auction_id = p.auction_id and p.account_id = c.id and
+			d.closing_datetime< NOW() and d.current_bid>=d.min_price
+ 		group by c.id) t1 
+ 		order by t1.count DESC 
+ 		LIMIT 5;
+</sql:query>
 
-                                <c:when test="${row.auction_closed == 1 && row.lost_auction == 0}">
-                                    You won the auction
-                                </c:when>
+<h2>Sales Report</h2>
 
-                                <c:otherwise>
-                                    Auction has not ended
-                                </c:otherwise>
-                            </c:choose></td>
+<h3>Total Earnings</h3>
+<c:forEach var="row" items="${earnings_per_item.rows}">
+<c:out value="${row.t_e}"></c:out>
+</c:forEach>
 
-                            <c:if test="${row.auction_closed == 1}">
-                                <td>
-                                    Winner: ${row.highest_bidder_first_name} ${row.highest_bidder_last_name}
-                                    <form>
-                                        <button value="${row.highest_bidder_email_address}" name="email_address"
-                                                formaction="contact_form.jsp">contact
-                                        </button>
-                                    </form>
-                                </td>
-                            </c:if>
-                            <td>
-                                <form>
-                                    <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">
-                                        View
-                                        Auction
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </c:when>
-            <c:otherwise>
-                You have not participated in any auctions.
-            </c:otherwise>
-        </c:choose>
+<h3>Earnings Per Item</h3>
+<table border="1" cellpadding="5">
+<tr>
+<th>Auction ID</th>
+<th>Final Bid</th>
+</tr>
+<c:forEach var="row" items="${earnings_per_item.rows}">
 
+        <tr>
+            <td><c:out value="${row.a}"></c:out></td>
+            <td><c:out value="${row.b}"></c:out></td>
+        </tr>
+</c:forEach>
+</table>
 
-        <sql:query dataSource="${dataSource}" var="all_items">
-            select *
-            from List_Active_Auctions
-            where account_id = ${cookie.account_id.value}
-            order by closing_datetime desc;
-        </sql:query>
+<h3>Earnings Per Item Type</h3>
+<table border="1" cellpadding="5">
+<tr>
+<th>Item Type</th>
+<th>Earnings</th>
+</tr>
+<c:forEach var="row" items="${earnings_per_item_type.rows}">
 
-        <c:choose>
-            <c:when test="${all_items.rowCount > 0}">
-                <p>Here are the auctions that you have started:</p>
+        <tr>
+            <td><c:out value="${row.types}"></c:out></td>
+            <td><c:out value="${row.earnings}"></c:out></td>
+        </tr>
+</c:forEach>
+</table>
 
-                <table border="1" cellpadding="5">
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Item Category</th>
-                        <th>Current Bid</th>
-                        <th>End Date</th>
-                    </tr>
+<h3>Earnings Per End User</h3>
+<table border="1" cellpadding="5">
+<tr>
+<th>Account ID</th>
+<th>Total Earnings</th>
+</tr>
+<c:forEach var="row" items="${earnings_per_end_user.rows}">
 
-                    <c:forEach var="row" items="${all_items.rows}">
-                        <tr>
-                            <td><c:out value="${row.item_name}"/></td>
-                            <td><c:out value="${row.item_type}"/></td>
-                            <td><c:out value="${row.current_bid}"/></td>
-                            <td><c:out value="${row.closing_datetime}"/></td>
+        <tr>
+            <td><c:out value="${row.id}"></c:out></td>
+            <td><c:out value="${row.earnings}"></c:out></td>
+        </tr>
+</c:forEach>
+</table>
 
-                            <td>
-                                <form>
-                                    <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">
-                                        View
-                                        Auction
-                                    </button>
-                                </form>
-                            </td>
-                            <c:if test="${row.auction_closed == 1}">
-                                <td>Auction Closed</td>
-                            </c:if>
-                            <c:if test="${row.auction_closed == 1 and row.current_bid >= row.min_price}">
-                                <td>
-                                    <form>
-                                        <button value="${row.highest_bidder_email_address}" name="email_address"
-                                                formaction="contact_form.jsp">Contact Winner
-                                        </button>
-                                    </form>
-                                </td>
-                            </c:if>
-                            <c:if test="${row.auction_closed != 1}">
-                                <td>
-                                    <form>
-                                        <button name="end_auction_id" formaction="end_auction.jsp"
-                                                value="${row.auction_id}">End Auction
-                                        </button>
-                                    </form>
-                                </td>
-                            </c:if>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </c:when>
-            <c:otherwise>
-                You have not started any auctions.
-            </c:otherwise>
-        </c:choose>
-    </c:when>
-    <c:otherwise> <!-- if logged out -->
-        <form>
-            <button formmethod="post" type="submit" formaction="login_form.jsp">Login</button>
-            <button formmethod="post" type="submit" formaction="signup_form.jsp">Sign Up</button>
-        </form>
-    </c:otherwise>
-</c:choose>
+<h3>Best Selling Items (assume best selling item = the items/auctions with most bids) (top 5)</h3>
+<table border="1" cellpadding="5">
+<tr>
+<th>Auction ID</th>
+<th>Number of Bids</th>
+</tr>
+<c:forEach var="row" items="${best_selling_items.rows}">
+        <tr>
+            <td><c:out value="${row.id}"></c:out></td>
+            <td><c:out value="${row.count}"></c:out></td>
+        </tr>
+</c:forEach>
+</table>
+
+<h3>Best Selling Users (assume best selling user = the users with most closed auctions) (top 5)</h3>
+<table border="1" cellpadding="5">
+<tr>
+<th>Account ID</th>
+<th>Number of Auctions Sold</th>
+</tr>
+<c:forEach var="row" items="${best_selling_users.rows}">
+
+        <tr>
+            <td><c:out value="${row.id}"></c:out></td>
+            <td><c:out value="${row.count}"></c:out></td>
+        </tr>
+</c:forEach>
+</table>
 
 </body>
 </html>

@@ -23,6 +23,7 @@
 <sql:query dataSource="${dataSource}" var="all_items">
     select *
     from List_Active_Auctions
+    where NOW() < closing_datetime
     order by closing_datetime desc;
 </sql:query>
 
@@ -47,13 +48,17 @@
                     <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button>
                 </form>
             </td>
-            <c:if test="${sessionScope.account_type == 'Customer Service Representative' or sessionScope.account_type == 'Administrator'}">
-                <td style="background-color: red">
-                    <form>
-                        <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">delete</button>
-                    </form>
-                </td>
-            </c:if>
+
+            <c:choose>
+                <c:when test="${sessionScope.account_type == 'Customer Service Representative' or sessionScope.account_type == 'Administrator'}">
+                    <td style="background-color: red">
+                        <form>
+                            <button name="delete_auction_id" formaction="delete_auction.jsp" value="${row.auction_id}">Delete Auction</button>
+                        </form>
+                    </td>
+                </c:when>
+            </c:choose>
+
         </tr>
     </c:forEach>
 </table>

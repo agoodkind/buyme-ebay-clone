@@ -3,6 +3,7 @@
 <!--Import some libraries that have classes that we need -->
 <%@ page import="java.io.*,java.util.*,java.sql.*" %>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%--
 Contributers:
 Alexander Goodkind amg540,
@@ -18,6 +19,7 @@ Michael Wang mtw95
     <title>Login Account</title>
 </head>
 <body>
+<t:logged_in_header/>
 <%
     try {
 

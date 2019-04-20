@@ -70,8 +70,6 @@
                 Auction Closed
             </c:if></td>
 
-                <%--<td>  TODO: winner    </td>--%>
-
         </tr>
     </c:forEach>
 </table>

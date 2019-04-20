@@ -44,9 +44,9 @@ Alexander Goodkind amg540
     </c:when>
     <c:when test="${not empty param.s_query and empty param.advanced and empty param.forwarded_from}">
         <sql:query dataSource="${dataSource}" var="results">
-            select item_name, item_type, item_id from
-            Clothing_Item
-            where item_name LIKE '%${param.s_query}%';
+            select a.auction_id, ci.item_name, ci.item_type, ci.item_id from
+            Clothing_Item ci, Auction a
+            where item_name LIKE '%<c:out value="${param.s_query}" escapeXml="true"/>%';
         </sql:query>
 
 
@@ -55,7 +55,7 @@ Alexander Goodkind amg540
                 <table border="1" cellpadding="5">
 
                     <tr>
-                        <th>Item Name</th>
+                        <th>Auction Name</th>
                         <th>Item Category</th>
                     </tr>
 
@@ -71,11 +71,7 @@ Alexander Goodkind amg540
                                         Cookie forward_to = new Cookie("forward_to", "individual_item.jsp");
                                         response.addCookie(forward_to);
                                     %>
-                                    <button value="${row.item_id}" name="item_id"
-                                            formaction="select_item_details.jsp">
-                                        View
-                                        Item
-                                    </button>
+                                    <button value="${row.auction_id}" name="item_id" formaction="view_auction.jsp">View Auction</button>
                                 </form>
                             </td>
                         </tr>
@@ -137,18 +133,10 @@ Alexander Goodkind amg540
 
                                         <c:when test="${auction_search == 'true' and not empty row.auction_id}">
                                             ${row.auction_id}
-                                            <button value="${row.auction_id}" name="auction_id"
-                                                    formaction="view_auction.jsp">
-                                                View
-                                                Auction
-                                            </button>
+                                            <button value="${row.auction_id}" name="auction_id" formaction="view_auction.jsp">View Auction</button>
                                         </c:when>
                                         <c:otherwise>
-                                            <button value="${row.item_id}" name="item_id"
-                                                    formaction="individual_item.jsp">
-                                                View
-                                                Item
-                                            </button>
+                                            <button value="${row.item_id}" name="item_id" formaction="individual_item.jsp">View Item</button>
                                         </c:otherwise>
                                     </c:choose>
                                 </form>

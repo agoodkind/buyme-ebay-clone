@@ -11,6 +11,8 @@ Michael Wang mtw95
 
 <html>
 	<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+   
 		<meta charset="UTF-8">
 		<title>Create Account - buyMe</title>
 	</head>

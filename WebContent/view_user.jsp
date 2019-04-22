@@ -29,6 +29,8 @@
 
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
+   
     <meta charset="UTF-8">
     <title><c:out value="${account_details.rows[0].first_name} ${account_details.rows[0].last_name} " />'s Profile - buyMe</title>
 </head>

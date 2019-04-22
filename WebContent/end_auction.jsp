@@ -16,6 +16,8 @@
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
+   
     <title>Delete Auction</title>
 </head>
 <body>

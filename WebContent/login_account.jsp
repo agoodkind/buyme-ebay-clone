@@ -15,6 +15,8 @@ Michael Wang mtw95
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
+   
     <meta charset="UTF-8">
     <title>Login Account</title>
 </head>
@@ -95,9 +97,7 @@ Michael Wang mtw95
         response.sendRedirect("index.jsp"); // go back to page that will now be updated with the cookie logged in
 
     } catch (Exception ex) {
-        out.print(ex.getStackTrace());
-        out.print(ex);
-        out.print("<p>Login failed.</p>");
+    	response.sendRedirect("error.jsp"); 
     }
 %>
 </body>

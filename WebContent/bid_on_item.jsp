@@ -10,6 +10,7 @@ Alexander Goodkind amg540
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
     <title>Delete Bid From Auction ${param.auction_id} - buyMe</title>
 </head>

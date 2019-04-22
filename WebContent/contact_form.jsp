@@ -9,6 +9,7 @@ Madhumitha Sivaraj ms2407,
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
     <title>Email Form - buyMe</title>
 </head>

@@ -9,7 +9,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Sales Report - buyMe</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+   <title>Sales Report - buyMe</title>
 </head>
 <body>
 

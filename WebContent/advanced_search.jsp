@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <meta charset="UTF-8">
     <title>Search for an item - buyMe</title>
 </head>

@@ -15,6 +15,8 @@ Amulya Mummaneni asm229
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
+   
     <meta charset="UTF-8">
     <title>Search for an item - buyMe</title>
 </head>

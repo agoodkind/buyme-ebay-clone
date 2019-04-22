@@ -17,6 +17,8 @@ Michael Wang mtw95
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
+   
     <meta charset="UTF-8">
     <title>Wishlist - buyMe</title>
 </head>

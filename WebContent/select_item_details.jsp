@@ -14,6 +14,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Continue - buyMe</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+   
 </head>
 <body>
 

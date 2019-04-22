@@ -10,6 +10,8 @@ Alexander Goodkind amg540
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
+   
     <meta charset="UTF-8">
     <title>Q&A for Auction #${param.auction_id} - buyMe</title>
 </head>

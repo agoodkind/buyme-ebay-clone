@@ -7,6 +7,7 @@ Alexander Goodkind amg540
 --%>
 <html>
 	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
 		<meta charset="UTF-8">
 		<title>Login - buyMe</title>
 	</head>

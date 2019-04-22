@@ -1,110 +1,93 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Alexander Goodkind amg540
-  Date: 2019-04-18
-  Time: 22:07
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" import="com.group37db336.pkg.*" %>
-<%@ page import="java.io.*,java.util.*,java.sql.*" %>
-<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
-<%@ page import="java.util.ArrayList" %>
-
+<%--Contributers:
+Alexander Goodkind amg540,
+Amulya Mummaneni asm229
+--%>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Auction</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+   
+    <title>Inbox - buyMe</title>
 </head>
 <body>
 
-
 <t:logged_in_header/>
 
-<c:choose>
-    <c:when test="${sessionScope.account_type == 'Administrator' or sessionScope.account_type == 'Customer Service Representative'}">
-        <sql:setDataSource var="dataSource"
-                           driver="${initParam['driverClass']}"
-                           url="${initParam['connectionURL']}"
-                           user="${initParam['username']}"
-                           password="${initParam['password']}"/>
-        <c:choose>
-            <c:when test="${not empty param.update_auction_id}">
-                <sql:query var="edit_account" dataSource="${dataSource}">
-                    select * from Auction where auction_id = ${param.update_auction_id};
-                </sql:query>
+<%-- comment --%>
+
+<sql:setDataSource var="dataSource"
+                   driver="${initParam['driverClass']}"
+                   url="${initParam['connectionURL']}"
+                   user="${initParam['username']}"
+                   password="${initParam['password']}"/>
+
+<sql:query dataSource="${dataSource}" var="result">
+    select e.from_account_id,
+    e.timesent,
+    e.message_subject,
+    e.message_id,
+    a.first_name,
+    a.last_name,
+    a.email_address
+    from Email e, Account a
+    where e.from_account_id = a.id and e.to_account_id = ${cookie.account_id.value}
+    order by e.timesent desc;
+</sql:query>
+
+<c:if test="${not empty param.message_id}">
+    <sql:transaction dataSource="${dataSource}">
+        <sql:update var="delete_email">
+            DELETE FROM Email
+            WHERE message_id = ${param.message_id}
+        </sql:update>
+    </sql:transaction>
+    <br<c:choose><c:when test="${delete_email > 0}"></c:when></c:choose><br>Email successfully deleted. Refresh to reflect changes. <br>
+</c:if>
+
+<button formaction="contact_form.jsp">Compose New Email</button>
+
+<h2>View All Email</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>From</th>
+        <th>Subject</th>
+        <th>Time</th>
+    </tr>
+
+    <c:forEach var="row" items="${result.rows}">
+        <tr>
+            <td><c:out value="${row.first_name} ${row.last_name}"/>&comma;&nbsp;<i>&lt;<c:out
+                    value="${row.email_address}"/>&gt;</i></td>
+            <td><c:out value="${row.message_subject}"/></td>
+            <td><fmt:formatDate value="${row.timesent}" pattern="h:mm a 'on' MM/dd/yyyy"/></td>
+            <td>
+                <form>
+                    <button value="${row.message_id}" name="message_id" formaction="individual_email.jsp">Open</button>
+                </form>
+            </td>
+            <td>
+                <form>
+                    <button value="${row.email_address}" name="email_address" formaction="contact_form.jsp">Reply
+                    </button>
+                </form>
+            </td>
+            <td>
                 <form>
 
-                    <h3>editing auction with ID: <c:out value="${edit_account.rows[0].auction_id}"/></h3>
-                    Current Bid: <input type="number" name="current_bid"
-                                        value="${edit_account.rows[0].current_bid}"><br>
-                    Days to end from now (closing date): <input value="${edit_account.rows[0].closing_datetime}"
-                                                                type="number" name="days_to_end"><br>
-                    Min Price: <input type="number" value="${edit_account.rows[0].min_price}" name="min_price"><br>
-                    Item ID: <input type="number" value="${edit_account.rows[0].item_id}" name="item_id"><br>
-                    <input type="hidden" name="update_auction_id_with_new_values" value="${param.update_auction_id}">
-                    <input type="submit" value="Submit">
+                    <button value="${row.message_id}" name="message_id" formaction="email_inbox.jsp">Delete</button>
+
                 </form>
-            </c:when>
-            <c:when test="${not empty param.update_auction_id_with_new_values}">
-                <sql:update var="updated_auction_id" dataSource="${dataSource}">
-                    update Auction
-                    <%
-                        String queryBuilder = "SET ";
-
-                        HashMap<String, String> params = new HashMap<String, String>();
-
-                        if (request.getParameter("current_bid") != null && !request.getParameter("current_bid").isEmpty()) {
-                            params.put("current_bid", request.getParameter("current_bid"));
-                        }
-
-                        if (request.getParameter("days_to_end") != null && !request.getParameter("days_to_end").isEmpty()) {
-                            params.put("closing_datetime", "DATE_ADD(NOW(), INTERVAL " + request.getParameter("days_to_end") + " DAY)");
-                        }
-
-                        if (request.getParameter("min_price") != null && !request.getParameter("min_price").isEmpty()) {
-                            params.put("min_price", request.getParameter("min_price"));
-                        }
-
-                        if (request.getParameter("item_id") != null && !request.getParameter("item_id").isEmpty()) {
-                            params.put("item_id", request.getParameter("item_id"));
-                        }
-
-                        int index = 0;
-
-                        for (Map.Entry<String, String> entry : params.entrySet()) {
-                            if (index > 0) {
-                                queryBuilder += ",";
-                            }
-                            index++;
-                            String key = entry.getKey();
-                            String value = entry.getValue();
-                            queryBuilder += " `" + key + "` = " + value + " ";
-                        }
-
-                        pageContext.setAttribute("edit_query", queryBuilder);
-                    %>
-                    ${edit_query}  WHERE auction_id = ${param.update_auction_id_with_new_values};
-                </sql:update>
-
-                <c:choose>
-                    <c:when test="${updated_auction_id > 0}">
-                        Auction with ID ${param.update_auction_id_with_new_values} updated successfully
-                    </c:when>
-                </c:choose>
-            </c:when>
-        </c:choose>
-    </c:when>
-    <c:otherwise>
-        You are not authorized to view this page, redirecting in 5 seconds..
-        <meta http-equiv="refresh" content="5;url=index.jsp"/>
-    </c:otherwise>
-</c:choose>
-
-<%--edit account info--%>
+            </td>
+        </tr>
+    </c:forEach>
+</table>
 
 </body>
 </html>
